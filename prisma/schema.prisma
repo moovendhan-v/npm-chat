@@ -1,0 +1,36 @@
+model User {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  username String
+  email    String   @unique
+  groups   Group[]  @relation("UserGroups")
+  messages Message[]
+}
+
+model Group {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  admins      User[]   @relation("GroupAdmins")
+  members     User[]   @relation("UserGroups")
+  permissions Permission[]
+}
+
+model Message {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime  @default(now())
+  senderId  String
+  sender    User      @relation(fields: [senderId], references: [id])
+  groupId   String?
+  group     Group?    @relation(fields: [groupId], references: [id])
+}
+
+model Permission {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  groupId   String
+  group     Group    @relation(fields: [groupId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  canRead   Boolean
+  canWrite  Boolean
+  isAdmin   Boolean
+}
