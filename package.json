@@ -10,9 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^5.19.0",
     "mongodb": "^6.8.0",
-    "prisma": "^5.18.0",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5"
   },
@@ -21,6 +20,7 @@
     "@types/node": "^22.5.0",
     "@types/socket.io": "^3.0.2",
     "nodemon": "^3.1.4",
+    "prisma": "^5.19.0",
     "typescript": "^5.5.4"
   }
 }

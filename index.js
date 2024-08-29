@@ -1,19 +1,23 @@
 // index.js
 
-import GetUsersCommand from './commands/GetUsersCommand';
+import GetChatUsersCommand from './commands/GetUsersCommand.js';
+
+import InsertUserCommand from './commands/CreateUserCommand.js';
+
+async function createUser() {
+  // Insert a new user
+  const insertUserCommand = new InsertUserCommand('newUser', 'newuser@example.com');
+  const newUser = await insertUserCommand.execute();
+  console.log('Inserted User:', newUser);
+}
+
+createUser();
+ 
 
 async function run() {
-  const getUsersCommand = new GetUsersCommand();
+  const getUsersCommand = new GetChatUsersCommand();
   const users = await getUsersCommand.execute();
   console.log('Users:', users);
-
-//   const createGroupCommand = new CreateGroupCommand(
-//     'Developers',
-//     ['adminUserId1', 'adminUserId2'],
-//     ['userId1', 'userId2', 'userId3']
-//   );
-//   const group = await createGroupCommand.execute();
-//   console.log('Created Group:', group);
 }
 
 run();

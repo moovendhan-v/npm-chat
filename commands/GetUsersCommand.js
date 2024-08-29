@@ -1,7 +1,7 @@
 // commands/GetUsersCommand.js
 
-import Command from './Command';
-import prisma from '../prismaClient';
+import Command from './Command.js';
+import prisma from '../prisma/prismaClient.js';
 
 class GetChatUsersCommand extends Command {
   async execute() {
@@ -10,3 +10,4 @@ class GetChatUsersCommand extends Command {
 }
 
 export default GetChatUsersCommand;
+ 

@@ -1,17 +1,37 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  username String
-  email    String   @unique
-  groups   Group[]  @relation("UserGroups")
-  messages Message[]
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  username     String
+  email        String        @unique
+  groups       GroupUser[]   @relation("UserGroups")  // Join table
+  messages     Message[]
+  permissions  Permission[]  // Add this line for the missing relation
 }
 
 model Group {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  admins      User[]   @relation("GroupAdmins")
-  members     User[]   @relation("UserGroups")
+  admins      GroupUser[]  @relation("GroupAdmins")  // Join table with relation name
+  members     GroupUser[]  @relation("GroupMembers")  // Join table with relation name
   permissions Permission[]
+  messages    Message[]    @relation("GroupMessages") // Add this line for the missing relation
+}
+
+model GroupUser {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  groupId   String
+  userId    String
+  user      User     @relation("UserGroups", fields: [userId], references: [id])
+  group     Group    @relation("GroupMembers", fields: [groupId], references: [id])
+  groupAdmin Group   @relation("GroupAdmins", fields: [groupId], references: [id]) // Add this line for the missing relation
 }
 
 model Message {
@@ -21,7 +41,7 @@ model Message {
   senderId  String
   sender    User      @relation(fields: [senderId], references: [id])
   groupId   String?
-  group     Group?    @relation(fields: [groupId], references: [id])
+  group     Group?    @relation("GroupMessages", fields: [groupId], references: [id])
 }
 
 model Permission {
