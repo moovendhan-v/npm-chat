@@ -4,7 +4,7 @@
 import GetUsersCommand from './commands/user/GetUsersCommand.js';
 import InsertUserCommand from './commands/user/CreateUserCommand.js';
 import CreateGroupCommand from './commands/group/CreateGroupCommand.js';
-
+import InsertChannelCommand from './commands/channel/InsertChannleCommand.js';
 
 console.log('Running index file');
 
@@ -39,6 +39,18 @@ console.log('Running index file');
 //   }
   
 // createGroups();
+
+async function createChannle() {
+  const insertChannelCommand = new InsertChannelCommand("testechannle", "teste desc", '66f8e98a9b1ee76d34240d83', true);
+
+  try {
+    const channel = await insertChannelCommand.execute();
+    console.log('Channel created:', channel);
+  } catch (error) {
+    console.error('Failed to create channel:', error);
+  }
+}
+createChannle();
 
 // import express from 'express';
 // import { createServer } from 'http';

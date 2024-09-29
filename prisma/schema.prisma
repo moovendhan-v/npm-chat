@@ -88,6 +88,7 @@ model ChannelParticipant {
   channelId String
   user      User    @relation(fields: [userId], references: [id])
   userId    String
+  isAdmin   Boolean @default(false) // New field to indicate admin status
 }
 
 model Message {
