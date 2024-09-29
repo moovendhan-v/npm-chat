@@ -1,6 +1,6 @@
 datasource db {
   provider = "mongodb"
-  url      = env("DB_URL")
+  url      = ""
 }
 
 generator client {
@@ -8,49 +8,109 @@ generator client {
 }
 
 model User {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  username     String
-  email        String        @unique
-  groups       GroupUser[]   @relation("UserGroups")  // Join table
-  messages     Message[]
-  permissions  Permission[]  // Add this line for the missing relation
+  id            String                 @id @default(auto()) @map("_id") @db.ObjectId
+  username      String                 @unique
+  email         String                 @unique
+  chatsSent     OneOnOneChat[]         @relation("senderChats")
+  chatsReceived OneOnOneChat[]         @relation("receiverChats")
+  groupChats    GroupChatParticipant[]
+  channels      ChannelParticipant[]
+  messages      Message[]              @relation("userMessages")
+  reactions     Reaction[]             @relation("userReactions")
+  createdAt     DateTime               @default(now())
+  
+  // Relations
+  groupAdmins   GroupAdmin[]           @relation("GroupAdminUser")
+  groupMembers  GroupMember[]          @relation("GroupMemberUser")
+}
+
+model OneOnOneChat {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  sender     User      @relation("senderChats", fields: [senderId], references: [id])
+  senderId   String
+  receiver   User      @relation("receiverChats", fields: [receiverId], references: [id])
+  receiverId String
+  messages   Message[]
+  createdAt  DateTime  @default(now())
 }
 
 model Group {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  admins      GroupUser[]  @relation("GroupAdmins")  // Join table with relation name
-  members     GroupUser[]  @relation("GroupMembers")  // Join table with relation name
-  permissions Permission[]
-  messages    Message[]    @relation("GroupMessages") // Add this line for the missing relation
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  admins  GroupAdmin[]
+  members GroupMember[]
 }
 
-model GroupUser {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  groupId   String
+model GroupAdmin {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String
+  groupId String
+  user    User    @relation("GroupAdminUser", fields: [userId], references: [id])
+  group   Group   @relation(fields: [groupId], references: [id])
+}
+
+model GroupMember {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String
+  groupId String
+  user    User    @relation("GroupMemberUser", fields: [userId], references: [id])
+  group   Group   @relation(fields: [groupId], references: [id])
+}
+
+model GroupChat {
+  id           String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  messages     Message[]
+  participants GroupChatParticipant[] 
+  createdAt    DateTime               @default(now())
+}
+
+model GroupChatParticipant {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  groupChat   GroupChat @relation(fields: [groupChatId], references: [id])
+  groupChatId String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model Channel {
+  id           String               @id @default(auto()) @map("_id") @db.ObjectId
+  name         String               @unique
+  description  String?
+  messages     Message[]
+  participants ChannelParticipant[] 
+  createdAt    DateTime             @default(now())
+}
+
+model ChannelParticipant {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+  user      User    @relation(fields: [userId], references: [id])
   userId    String
-  user      User     @relation("UserGroups", fields: [userId], references: [id])
-  group     Group    @relation("GroupMembers", fields: [groupId], references: [id])
-  groupAdmin Group   @relation("GroupAdmins", fields: [groupId], references: [id]) // Add this line for the missing relation
 }
 
 model Message {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
   content   String
-  createdAt DateTime  @default(now())
+  sender    User          @relation("userMessages", fields: [senderId], references: [id]) 
   senderId  String
-  sender    User      @relation(fields: [senderId], references: [id])
+  chat      OneOnOneChat? @relation(fields: [chatId], references: [id])
+  chatId    String?
+  groupChat GroupChat?    @relation(fields: [groupId], references: [id])
   groupId   String?
-  group     Group?    @relation("GroupMessages", fields: [groupId], references: [id])
+  channel   Channel?      @relation(fields: [channelId], references: [id])
+  channelId String?
+  reactions Reaction[]
+  createdAt DateTime      @default(now())
 }
 
-model Permission {
+model Reaction {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  groupId   String
-  group     Group    @relation(fields: [groupId], references: [id])
+  type      String // e.g., "like", "love", "laugh"
+  message   Message  @relation(fields: [messageId], references: [id])
+  messageId String
+  user      User     @relation("userReactions", fields: [userId], references: [id]) 
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  canRead   Boolean
-  canWrite  Boolean
-  isAdmin   Boolean
+  createdAt DateTime @default(now())
 }

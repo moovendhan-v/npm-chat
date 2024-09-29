@@ -1,7 +1,7 @@
 // commands/GetChatUserMessageCommand.js
 
 import Command from './Command';
-import prisma from '../prismaClient';
+import prisma from '../../prisma/prismaClient.js';
 
 class GetChatUserMessageCommand extends Command {
   constructor(userId) {
