@@ -1,10 +1,10 @@
-// index.js
+// index.ts
 
 
-import GetUsersCommand from './commands/user/GetUsersCommand.js';
-import InsertUserCommand from './commands/user/CreateUserCommand.js';
-import CreateGroupCommand from './commands/group/CreateGroupCommand.js';
-import InsertChannelCommand from './commands/channel/InsertChannleCommand.js';
+import GetUsersCommand from './commands/user/GetUsersCommand.ts';
+import InsertUserCommand from './commands/user/CreateUserCommand.ts';
+import {CreateGroupCommand, AddMemberToGroupCommand, AddAdminToGroupCommand, DeleteGroupCommand} from './commands/group/GroupCommand.js';
+import InsertChannelCommand from './commands/channel/InsertChannleCommand.ts';
 
 console.log('Running index file');
 
@@ -25,10 +25,10 @@ console.log('Running index file');
 // gerUser();
 
 // async function createGroups() {
-//     const adminIds = ['66f8e98a9b1ee76d34240d81'];
+//     const adminIds = ['66d0c154c5fc131fb72044ae'];
 //     const memberIds = ['66d0c154c5fc131fb72044ae'];
   
-//     const createGroupsCommand = new CreateGroupCommand('My testsss', adminIds, memberIds);
+//     const createGroupsCommand = new CreateGroupCommand('Final group testing', adminIds, memberIds);
   
 //     try {
 //       const group = await createGroupsCommand.execute();
@@ -40,17 +40,31 @@ console.log('Running index file');
   
 // createGroups();
 
-async function createChannle() {
-  const insertChannelCommand = new InsertChannelCommand("testechannle", "teste desc", '66f8e98a9b1ee76d34240d83', true);
+async function deleteGroup() {
+
+  const deleteGroupCommand = new DeleteGroupCommand('66f9887244b7d4a4998bedf0');
 
   try {
-    const channel = await insertChannelCommand.execute();
-    console.log('Channel created:', channel);
+    const group = await deleteGroupCommand.execute();
+    console.log('Group deleted successfully:', group);
   } catch (error) {
-    console.error('Failed to create channel:', error);
+    console.error('Error deleting group:', error);
   }
 }
-createChannle();
+
+deleteGroup();
+
+// async function createChannle() {
+//   const insertChannelCommand = new InsertChannelCommand("testechannle", "teste desc", '66f8e98a9b1ee76d34240d83', true);
+
+//   try {
+//     const channel = await insertChannelCommand.execute();
+//     console.log('Channel created:', channel);
+//   } catch (error) {
+//     console.error('Failed to create channel:', error);
+//   }
+// }
+// createChannle();
 
 // import express from 'express';
 // import { createServer } from 'http';

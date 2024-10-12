@@ -3,15 +3,21 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class InsertChannelCommand {
-  constructor(name, description, userId, isAdmin) {
+  private name: string;
+  private description: string;
+  private userId: string;
+  private isAdmin: boolean;
+
+  constructor(name: string, description: string, userId: string, isAdmin: boolean) {
     this.name = name;
     this.description = description;
     this.userId = userId;
     this.isAdmin = isAdmin;
   }
 
-  async execute() {
+  async execute(): Promise<any> { 
     try {
+      
       const channel = await prisma.channel.create({
         data: {
           name: this.name,
@@ -23,7 +29,7 @@ class InsertChannelCommand {
         data: {
           userId: this.userId,
           channelId: channel.id,
-          isAdmin: true,
+          isAdmin: this.isAdmin,
         },
       });
 

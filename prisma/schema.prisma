@@ -1,6 +1,6 @@
 datasource db {
   provider = "mongodb"
-  url      = ""
+  url      = "mongodb+srv://admin:X0hiMq5gp55sV5Ci@cluster0.taw30xx.mongodb.net/mydatabase?retryWrites=true&w=majority"
 }
 
 generator client {
