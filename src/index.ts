@@ -1,20 +1,16 @@
-// index.js
+// index.ts
 
-
-import GetUsersCommand from './commands/user/GetUsersCommand.js';
-import InsertUserCommand from './commands/user/CreateUserCommand.js';
-import CreateGroupCommand from './commands/group/CreateGroupCommand.js';
-import InsertChannelCommand from './commands/channel/InsertChannleCommand.js';
-
+import InsertUserCommand from "@/commands/user/CreateUserCommand";
 console.log('Running index file');
+console.log("testing");
 
-// async function createUser() {
-//   // Insert a new user
-//   const insertUserCommand = new InsertUserCommand('newUsersses', 'demoness@example.com');
-//   const newUser = await insertUserCommand.execute();
-//   console.log('Inserted User:', newUser);
-// }
-// createUser();
+async function createUser() {
+  // Insert a new user
+  const insertUserCommand = new InsertUserCommand({username: "Moovendhan", email: "vmoovendhan3@gmail.com"});
+  const newUser = await insertUserCommand.execute();
+  console.log('Inserted User:', newUser);
+}
+createUser();
   
 
 // async function gerUser() {
@@ -40,17 +36,17 @@ console.log('Running index file');
   
 // createGroups();
 
-async function createChannle() {
-  const insertChannelCommand = new InsertChannelCommand("testechannle", "teste desc", '66f8e98a9b1ee76d34240d83', true);
+// async function createChannle() {
+//   const insertChannelCommand = new InsertChannelCommand("testechannle", "teste desc", '66f8e98a9b1ee76d34240d83', true);
 
-  try {
-    const channel = await insertChannelCommand.execute();
-    console.log('Channel created:', channel);
-  } catch (error) {
-    console.error('Failed to create channel:', error);
-  }
-}
-createChannle();
+//   try {
+//     const channel = await insertChannelCommand.execute();
+//     console.log('Channel created:', channel);
+//   } catch (error) {
+//     console.error('Failed to create channel:', error);
+//   }
+// }
+// createChannle();
 
 // import express from 'express';
 // import { createServer } from 'http';

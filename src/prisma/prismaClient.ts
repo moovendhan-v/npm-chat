@@ -1,10 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
-// Instantiate Prisma Client
 const prisma = new PrismaClient();
 
-// Optional: Middleware or error handling can be added here
-prisma.$use(async (params, next) => {
+prisma.$use(async (params: Prisma.MiddlewareParams, next) => {
   try {
     const result = await next(params);
     return result;

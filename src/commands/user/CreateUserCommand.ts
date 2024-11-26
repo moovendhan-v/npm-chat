@@ -1,14 +1,18 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
+import { CreateUserInput } from '../../types/CreateUser';
 
 const prisma = new PrismaClient();
 
 class InsertUserCommand {
-  constructor(username, email) {
+  private username: string;
+  private email: string;
+
+  constructor({ username, email }: CreateUserInput) {
     this.username = username;
     this.email = email;
   }
 
-  async execute() {
+  public async execute(): Promise<Prisma.UserGetPayload<{}>> {
     try {
       const user = await prisma.user.create({
         data: {

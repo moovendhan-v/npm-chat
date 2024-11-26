@@ -1,6 +1,6 @@
 datasource db {
   provider = "mongodb"
-  url      = ""
+  url      = env("MONGO_CONNETION_STRING")
 }
 
 generator client {
