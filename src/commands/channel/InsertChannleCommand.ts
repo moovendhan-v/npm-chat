@@ -4,7 +4,7 @@ import {
   ChannelParticipant,
   InsertChannelCommandInput,
   ChatService,
-} from '../../types/ChannelTypes';
+} from '@/types/ChannelTypes';
 
 const prisma: PrismaClient = new PrismaClient();
 

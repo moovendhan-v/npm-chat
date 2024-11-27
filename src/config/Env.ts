@@ -2,7 +2,12 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  MONGO_CONNETION_STRING: z.string()
+  MONGO_CONNETION_STRING: z.string(),
+  SMTP_HOST: z.string(),
+  SMTP_PORT: z.string().default("465"),
+  SMTP_USERNAME: z.string(),
+  SMTP_PASSWORD: z.string(),
+  SMTP_FROM_EMAIL: z.string()
 });
 
 const env = envSchema.safeParse(process.env);
@@ -13,4 +18,4 @@ if (!env.success) {
 }
 
 export const Env = env.data;
-console.log(Env)
+console.log(Env);

@@ -4,9 +4,35 @@ import InsertUserCommand from "@/commands/user/CreateUserCommand";
 import GetUsersCommand from "@/commands/user/GetUsersCommand";
 import CreateGroupCommand from "@/commands/group/CreateGroupCommand";
 import InsertChannelCommand from "@/commands/channel/InsertChannleCommand";
+import GetGroupsCommand from "@/commands/group/GetGroupsCommand";
+import GetChannelCommand from "@/commands/channel/GetChannelCommand";
 
 console.log('Running index file');
 console.log("testing");
+
+const getChannel = async () => {
+    try {
+        const command = new GetChannelCommand();
+        const response = await command.GetAllGroups();
+        console.log(response);
+    } catch (error) {
+        console.log("Error getting users", error)
+    }
+}
+
+getChannel();
+
+// const getGrououps = async () => {
+//     try {
+//         const command = new GetGroupsCommand();
+//         const response = await command.GetAllGroups();
+//         console.log(response);
+//     } catch (error) {
+//         console.log("Error getting users", error)
+//     }
+// }
+
+// getGrououps();
 
 // async function createUser() {
 //   // Insert a new user

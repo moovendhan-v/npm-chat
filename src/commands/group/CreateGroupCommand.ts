@@ -1,7 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import {
   CreateGroupType
-} from "../../types/CreateGroupType.js"
+} from "@/types/CreateGroupType.js"
 
 const prisma: PrismaClient = new PrismaClient();
 

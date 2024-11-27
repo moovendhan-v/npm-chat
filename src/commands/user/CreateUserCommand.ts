@@ -1,5 +1,5 @@
 import { PrismaClient, Prisma } from '@prisma/client';
-import { CreateUserInput } from '../../types/CreateUser';
+import { CreateUserInput } from '@/types/CreateUser';
 
 const prisma = new PrismaClient();
 
