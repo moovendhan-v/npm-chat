@@ -10,17 +10,17 @@ import GetChannelCommand from "@/commands/channel/GetChannelCommand";
 console.log('Running index file');
 console.log("testing");
 
-const getChannel = async () => {
-    try {
-        const command = new GetChannelCommand();
-        const response = await command.GetAllGroups();
-        console.log(response);
-    } catch (error) {
-        console.log("Error getting users", error)
-    }
-}
+// const getChannel = async () => {
+//     try {
+//         const command = new GetChannelCommand();
+//         const response = await command.GetAllGroups();
+//         console.log(response);
+//     } catch (error) {
+//         console.log("Error getting users", error)
+//     }
+// }
 
-getChannel();
+// getChannel();
 
 // const getGrououps = async () => {
 //     try {
@@ -135,3 +135,21 @@ getChannel();
 // server.listen(PORT, () => {
 //   console.log(`Server is running on http://localhost:${PORT}`);
 // });
+
+import { createServer } from 'http';
+import { setupSocketServer } from '@/config/ws-server';
+
+// Create an HTTP server
+const httpServer = createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Socket.IO server is running');
+});
+
+// Set up the Socket.IO server
+setupSocketServer(httpServer);
+
+// Start the HTTP server
+const PORT = 8085;
+httpServer.listen(PORT, () => {
+  console.log(`Server is listening on http://localhost:${PORT}`);
+});
