@@ -5,7 +5,7 @@ import {
 
 const prisma: PrismaClient = new PrismaClient();
 
-class CreateGroupCommand {
+class CreateGroupService {
   private name: string;
   private adminIds: string[];
   private memberIds: string[];
@@ -64,4 +64,4 @@ class CreateGroupCommand {
   }
 }
 
-export default CreateGroupCommand;
+export default CreateGroupService;

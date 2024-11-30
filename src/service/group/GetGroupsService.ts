@@ -1,9 +1,9 @@
 import prisma from '@/prisma/prismaClient'
 
-class GetGroupsCommand {
+class GetGroupsService {
   async GetAllGroups() {
     return await prisma.group.findMany();
   }
 }
 
-export default GetGroupsCommand;
+export default GetGroupsService;

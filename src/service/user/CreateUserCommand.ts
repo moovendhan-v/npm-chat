@@ -3,7 +3,7 @@ import { CreateUserInput } from '@/types/CreateUser';
 
 const prisma = new PrismaClient();
 
-class InsertUserCommand {
+class InsertUserService {
   private username: string;
   private email: string;
 
@@ -28,4 +28,4 @@ class InsertUserCommand {
   }
 }
 
-export default InsertUserCommand;
+export default InsertUserService;

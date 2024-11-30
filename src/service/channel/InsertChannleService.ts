@@ -2,15 +2,15 @@ import { PrismaClient } from '@prisma/client';
 import {
   Channel,
   ChannelParticipant,
-  InsertChannelCommandInput,
+  InsertChannelServiceInput,
   ChatService,
 } from '@/types/ChannelTypes';
 
 const prisma: PrismaClient = new PrismaClient();
 
-class InsertChannelCommand implements ChatService {
+class InsertChannelService implements ChatService {
 
-  async createChannel(input: InsertChannelCommandInput): Promise<Channel> {
+  async createChannel(input: InsertChannelServiceInput): Promise<Channel> {
     try {
       const channel = await prisma.channel.create({
         data: {
@@ -56,4 +56,4 @@ class InsertChannelCommand implements ChatService {
   
 }
 
-export default InsertChannelCommand;
+export default InsertChannelService;

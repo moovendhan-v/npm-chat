@@ -1,9 +1,9 @@
 import prisma from '@/prisma/prismaClient';
 
-class GetUsersCommand {
+class GetUsersService {
   async execute() {
     return await prisma.user.findMany();
   }
 }
 
-export default GetUsersCommand;
+export default GetUsersService;

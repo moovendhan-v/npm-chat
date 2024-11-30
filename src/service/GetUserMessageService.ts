@@ -1,9 +1,9 @@
-import prisma from '../prisma/prismaClient';
+import prisma from '@/prisma/prismaClient';
 
-class GetUsersCommand {
+class GetUsersService {
   public async execute(): Promise<ReturnType<typeof prisma.user.findMany>> {
     return await prisma.user.findMany();
   }
 }
 
-export default GetUsersCommand;
+export default GetUsersService;
