@@ -115,19 +115,3 @@ model Reaction {
   userId    String
   createdAt DateTime @default(now())
 }
-
-// Define the Role model
-model Role {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique // e.g., "admin", "user"
-  permissions RoutePermission[]
-}
-
-// Define the RoutePermission model
-model RoutePermission {
-  id         Int    @id @default(autoincrement())
-  route      String // The route (e.g., "/users/all")
-  method     String // The HTTP method (e.g., "GET", "POST")
-  roleId     Int
-  role       Role   @relation(fields: [roleId], references: [id])
-}

@@ -1,5 +1,5 @@
 import prisma from '@/prisma/prismaClient';
-import { UserFilters, RequestOptions, } from "@/types/GetUsesType"
+import { UserFilters, RequestOptions, } from "@/types/GetUsesType";
 
 class GetUsersService {
 

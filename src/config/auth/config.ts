@@ -12,7 +12,7 @@ const getUsers = Object.freeze({
             allowedFields: ["id", "username", "email", "name", "createdAt"]
         },
         guest: {
-            allowedFields: ["id", "username", "email", "name"]
+            allowedFields: ["id", "username", "email", "name", "createdAt"]
         }
     }
 });
@@ -31,7 +31,7 @@ const getAllUsers = Object.freeze({
             allowedFields: ["id", "username", "email", "name", "createdAt"]
         },
         guest: {
-            allowedFields: ["id", "username", "email", "name"]
+            allowedFields: ["id", "username", "email", "name", "createdAt"]
         }
     }
 });

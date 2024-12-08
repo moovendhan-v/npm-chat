@@ -1,23 +1,18 @@
 import { PrismaClient, Prisma } from '@prisma/client';
-import { CreateUserInput } from '@/types/CreateUser';
+import { UserFilters, RequestOptions, } from "@/types/GetUsesType";
+import { CreateUserInput } from "@/types/CreateUser";
+
 
 const prisma = new PrismaClient();
 
-class InsertUserService {
-  private username: string;
-  private email: string;
+class CreateUserService {
 
-  constructor({ username, email }: CreateUserInput) {
-    this.username = username;
-    this.email = email;
-  }
-
-  public async execute(): Promise<Prisma.UserGetPayload<{}>> {
+  public async createUser(payload: CreateUserInput): Promise<Prisma.UserGetPayload<{}>> {
     try {
       const user = await prisma.user.create({
         data: {
-          username: this.username,
-          email: this.email,
+          username: payload.userName,
+          email: payload.email,
         },
       });
       return user;
@@ -26,6 +21,7 @@ class InsertUserService {
       throw error;
     }
   }
+  
 }
 
-export default InsertUserService;
+export default CreateUserService;

@@ -1,66 +1,61 @@
 import { PrismaClient, Prisma } from '@prisma/client';
-import {
-  CreateGroupType
-} from "@/types/CreateGroupType.js"
+import { CreateGroupType } from "@/types/CreateGroupType";
 
-const prisma: PrismaClient = new PrismaClient();
+const prisma = new PrismaClient();
 
 class CreateGroupService {
-  private name: string;
-  private adminIds: string[];
-  private memberIds: string[];
 
-  constructor({ name, adminIds, memberIds }: CreateGroupType) {
-    this.name = name;
-    this.adminIds = adminIds;
-    this.memberIds = memberIds;
-  }
-
-  private async ensureUsersExist(userIds: string[]): Promise<void> {
+  private async validateUsers(userIds: string[]): Promise<void> {
     const existingUsers = await prisma.user.findMany({
       where: {
         id: { in: userIds },
       },
     });
 
-    const existingUserIds = existingUsers.map((user) => user.id);
-    const newUsers = userIds.filter((id) => !existingUserIds.includes(id));
+    const existingUserIds = existingUsers.map(user => user.id);
+    const invalidUserIds = userIds.filter(id => !existingUserIds.includes(id));
 
-    if (newUsers.length > 0) {
-      const error = new Error(
-        `Invalid user ids: ${newUsers.join(', ')}. These user IDs are not available in the database.`
-      );
-      error.name = 'InvalidUserId';
-      throw error;
+    if (invalidUserIds.length > 0) {
+      throw new Error(`Invalid user IDs: ${invalidUserIds.join(', ')}`);
     }
   }
 
-  public async execute(): Promise<Prisma.GroupGetPayload<{ include: { admins: true; members: true } }>> {
-    console.log('Data:', this.name, this.adminIds, this.memberIds);
+  public async createGroup(payload: CreateGroupType) {
+    const { name, admins = [], members = [] } = payload;
 
-    await this.ensureUsersExist([...this.adminIds, ...this.memberIds]);
+    if (!name || typeof name !== 'string') {
+      throw new Error('Group name is required and must be a string.');
+    }
 
-    const group = await prisma.group.create({
-      data: {
-        name: this.name,
-        admins: {
-          create: this.adminIds.map((adminId) => ({
-            userId: adminId,
-          })),
+    // Extract admin and member IDs for validation
+    const adminIds = admins.map(admin => admin.userId);
+    const memberIds = members.map(member => member.userId);
+
+    // Validate user IDs in the database
+    await this.validateUsers([...adminIds, ...memberIds]);
+
+    try {
+      const group = await prisma.group.create({
+        data: {
+          name,
+          admins: {
+            create: adminIds.map(userId => ({ userId })),
+          },
+          members: {
+            create: memberIds.map(userId => ({ userId })),
+          },
         },
-        members: {
-          create: this.memberIds.map((memberId) => ({
-            userId: memberId,
-          })),
+        include: {
+          admins: true,
+          members: true,
         },
-      },
-      include: {
-        admins: true,
-        members: true,
-      },
-    });
+      });
 
-    return group;
+      return group;
+    } catch (error) {
+      console.error('Error creating group:', error);
+      throw new Error('Failed to create group. Please try again.');
+    }
   }
 }
 

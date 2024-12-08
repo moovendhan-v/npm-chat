@@ -1,12 +1,16 @@
 import { Router } from 'express';
 import GetUsersController from '@/controller/user/GetUsersController';
+import CreateUsersController from '@/controller/user/CreateUserController';
 import { queryParamMiddleware } from '@/middleware/queryParamsMiddleware';
 
 const userRouter = Router();
-const userController = new GetUsersController();
+const GetUserController = new GetUsersController();
+const CreateUserController = new CreateUsersController();
 
-userRouter.get('/all', queryParamMiddleware, userController.getAllUsers);
+userRouter.get('/all', queryParamMiddleware, GetUserController.getAllUsers);
 
-userRouter.get('/', queryParamMiddleware, userController.getUserDetails);
+userRouter.get('/', queryParamMiddleware, GetUserController.getUserDetails);
+
+userRouter.post('/', CreateUserController.createUser);
 
 export default userRouter;
