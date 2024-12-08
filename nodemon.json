@@ -1,0 +1,9 @@
+{
+  "watch": ["src"],
+  "ext": "ts,json",
+  "ignore": ["node_modules"],
+  "exec": "npx tsx --inspect --trace-deprecation src/index.ts",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

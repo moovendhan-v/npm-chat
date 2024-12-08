@@ -2,10 +2,22 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { setupSocketServer } from './config/ws-server';
+import userRouter from '@/router/user/UsersRoute';
+import {Env} from "./config/Env";
+
+console.log(Env);
 
 // Create an Express application
 const app = express();
 const PORT = 8085;
+
+// Basic route for testing the server
+app.get('/', (req, res) => {
+  res.send('Hello, TypeScript with Express and Socket.IO!');
+});
+ 
+// Routes
+app.use('/users', userRouter);
 
 // Enable CORS with configuration
 app.use(cors({
