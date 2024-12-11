@@ -4,71 +4,77 @@ import { AuthConfig } from "@/config/auth/config";
 const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const path = req.originalUrl.split('?')[0];
     const userRole = req.user?.role || 'guest';
-    
-    console.debug(`Request received - Method: ${req.method}, Path: ${path}, Body: ${JSON.stringify(req.body)}, Role: ${userRole}`);
 
-    // Find the matching endpoint
-    const endpoint = Object.keys(AuthConfig.endpoints).find((key) =>
+    console.debug(`Request received - Method: ${req.method}, Path: ${path}, Role: ${userRole}`);
+
+    // Find the matching endpoint based on the path
+    const endpointKey = Object.keys(AuthConfig.endpoints).find((key) =>
         path.includes(AuthConfig.endpoints[key as keyof typeof AuthConfig.endpoints].path)
     );
 
-
-    console.log(endpoint);
-
-    if (!endpoint) {
+    if (!endpointKey) {
         return res.status(400).json({ error: "Invalid endpoint" });
     }
 
-    // Get endpoint configuration
-    const endpointConfig = AuthConfig.endpoints[endpoint as keyof typeof AuthConfig.endpoints];
-    
-    console.log(endpointConfig)
+    const endpointConfig = AuthConfig.endpoints[endpointKey as keyof typeof AuthConfig.endpoints];
 
-    // Get allowed fields for the current user role
-    const allowedFields = endpointConfig.roles[userRole as keyof typeof endpointConfig.roles]?.allowedFields ?? [];
+    // Verify if the user's role is allowed for the endpoint
+    if (!endpointConfig.apiAllowedRole.includes(userRole)) {
+        return res.status(403).json({
+            error: "You are not authorised to perform this action",
+            details: {
+                errorType: "UserRoleNotAllowed",
+                message: `User role '${userRole}' is not authorised to access '${path}'.`
+            }
+        });
+    }
 
-    console.log("allowedFields", allowedFields)
+    const allowedFields: string[] = endpointConfig.roles[userRole as keyof typeof endpointConfig.roles]?.allowedFields || [];
 
     if (allowedFields.length === 0) {
-        return res.status(403).json({ error: "No fields available for this role" });
+        return res.status(403).json({
+            error: "No fields available for this role",
+            details: {
+                errorType: "RoleFieldRestriction",
+                message: `User role '${userRole}' has no allowed fields for '${path}'.`
+            }
+        });
     }
 
     if (req.method === 'POST' || req.method === 'PUT') {
-        // Explicit type definition for request body
         const requestBody = req.body as Record<string, unknown>;
 
-        // Type-safe invalid fields check
-        const invalidFields: string[] = Object.keys(requestBody).reduce<string[]>((acc: string[], key: string) => {
-            if (!allowedFields.includes(key)) {
-                acc.push(key);
-            }
-            return acc;
-        }, []);
+        // Identify invalid fields in the request body
+        const invalidFields = Object.keys(requestBody).filter(key => !allowedFields.includes(key));
 
         if (invalidFields.length > 0) {
             return res.status(400).json({
-                error: `The following fields are not allowed for this role: ${invalidFields.join(', ')}`
+                error: "Invalid fields in request body",
+                details: {
+                    invalidFields,
+                    message: `The following fields are not allowed: ${invalidFields.join(', ')}`
+                }
             });
         }
 
-        // Create a new object with only allowed fields
-        const sanitizedBody: Record<string, unknown> = {};
-        
-        // Explicitly copy only allowed fields
-        allowedFields.forEach((field) => {
-            if (Object.prototype.hasOwnProperty.call(requestBody, field)) {
-                sanitizedBody[field] = requestBody[field];
-            }
-        });
+        // Create a sanitized body containing only allowed fields
+        const sanitizedBody = Object.fromEntries(
+            // TODO: Add the input validations using the zod
+            Object.entries(requestBody).filter(([key]) => allowedFields.includes(key))
+        );
 
         if (Object.keys(sanitizedBody).length === 0) {
-            return res.status(400).json({ error: "No valid fields provided for this role." });
+            return res.status(400).json({
+                error: "No valid fields provided",
+                details: {
+                    message: "Request body does not contain any valid fields for this role."
+                }
+            });
         }
 
-        // Replace request body with sanitized body
+        // Replace request body with the sanitized version
         req.body = sanitizedBody;
-        
-        console.log("Sanitized Body:", req.body);
+        console.debug("Sanitized Body:", req.body);
     }
 
     next();

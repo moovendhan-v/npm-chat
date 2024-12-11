@@ -21,7 +21,6 @@ export function handlePrismaError(error: any): PrismaErrorResponse | null {
                     message: `A record with the same value for the unique field '${fieldName}' already exists.`,
                     details: { field: fieldName },
                 }
-
             };
         }
 
