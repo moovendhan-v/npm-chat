@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import AppError from "@/utils/AppError"; // Adjust the import path as needed
-import { ErrorConfig, ErrorType } from "@/utils/error_handler/errorConfig"; // Import error config
+import { ErrorConfig, ErrorType } from "@/utils/error_handler/ErrorConfig"; // Import error config
 
 const errorHandlerMiddleware = (
   err: unknown,
@@ -25,6 +25,8 @@ const errorHandlerMiddleware = (
     // Dynamic message creation with placeholders for role and attempted path
     dynamicMessage = dynamicMessage.replace('{role}', req.user?.role || 'unknown')
       .replace('{path}', req.originalUrl);
+
+    console.log("dynamicMessage", dynamicMessage);
 
     // Prepare the response
     return res.status(parseInt(errorDetail.code, 10) || 500).json({

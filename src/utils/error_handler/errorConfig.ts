@@ -1,5 +1,4 @@
-// ErrorTypes.ts
-export type ErrorType = 'TooManyRequest' | 'NotFound' | 'InternalServerError' | 'Unauthorized' | 'UserRoleNotAllowed' | 'InvalidEndpoint' | 'RoleFieldRestriction';
+export type ErrorType = 'TooManyRequest' | 'NotFound' | 'InternalServerError' | 'Unauthorized' | 'UserRoleNotAllowed' | 'InvalidEndpoint' | 'RoleFieldRestriction' | 'invalidFieldsException';
 
 // ErrorDetails interface
 export interface ErrorDetails {
@@ -8,7 +7,7 @@ export interface ErrorDetails {
   type: string;
 }
 
-// Example error config file (`ErrorConfig.ts`)
+// ErrorConfig.ts
 export const ErrorConfig: Record<ErrorType, ErrorDetails> = {
   TooManyRequest: {
     message: 'Too many requests. Please try again later.',
@@ -31,19 +30,24 @@ export const ErrorConfig: Record<ErrorType, ErrorDetails> = {
     type: 'Unauthorized',
   },
   UserRoleNotAllowed: {
-    message: 'You are not authorized to access this path.',
+    message: 'Your user role does not have permission to access this resource.',
     code: '403',
     type: 'UserRoleNotAllowed',
   },
   InvalidEndpoint: {
-    message: 'Invalid enpoints.',
+    message: 'The requested endpoint is invalid or does not exist.',
     code: '404',
     type: 'InvalidEndpoint',
   },
   RoleFieldRestriction: {
-    message: 'Please check you fiels some fields are not authorised to for this role',
-    code: '404',
+    message: 'The fields in the request are not allowed for your user role.',
+    code: '400',
     type: 'RoleFieldRestriction',
+  },
+  invalidFieldsException: {
+    message: 'The provided fields in the request are not allowed for the user role or are invalid.',
+    code: '400',
+    type: 'invalidFieldsException',
   },
 };
 

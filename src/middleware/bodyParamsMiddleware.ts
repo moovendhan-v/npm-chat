@@ -14,6 +14,7 @@ const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFu
     );
 
     if (!endpointKey) {
+        // Invalid endpoint error
         throw new AppError("InvalidEndpoint");
     }
 
@@ -21,21 +22,19 @@ const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFu
 
     // Verify if the user's role is allowed for the endpoint
     if (!endpointConfig.apiAllowedRole.includes(userRole)) {
-        throw new AppError("UserRoleNotAllowed",
-            {
-                dynamicMessage: `User role {role} has no allowed to access is {path}`
-            }
-        );
+        // User role not allowed error with dynamic message
+        throw new AppError("UserRoleNotAllowed", {
+            dynamicMessage: `User role {role} is not allowed to access {path}`
+        });
     }
 
     const allowedFields: string[] = endpointConfig.roles[userRole as keyof typeof endpointConfig.roles]?.allowedFields || [];
 
     if (allowedFields.length === 0) {
-        throw new AppError("RoleFieldRestriction",
-            {
-                dynamicMessage: `User role '${userRole}' has no allowed fields for '${path}'.`
-            }
-        );
+        // Role field restriction error with dynamic message
+        throw new AppError("RoleFieldRestriction", {
+            dynamicMessage: `User role '${userRole}' has no allowed fields for '${path}'.`
+        });
     }
 
     if (req.method === 'POST' || req.method === 'PUT') {
@@ -45,12 +44,9 @@ const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFu
         const invalidFields = Object.keys(requestBody).filter(key => !allowedFields.includes(key));
 
         if (invalidFields.length > 0) {
-            return res.status(400).json({
-                error: "Invalid fields in request body",
-                details: {
-                    invalidFields,
-                    message: `The following fields are not allowed: ${invalidFields.join(', ')}`
-                }
+            // Invalid fields error with dynamic message
+            throw new AppError("invalidFieldsException", {
+                dynamicMessage: `The following fields are not allowed: ${invalidFields.join(', ')}`
             });
         }
 
@@ -61,11 +57,8 @@ const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFu
         );
 
         if (Object.keys(sanitizedBody).length === 0) {
-            return res.status(400).json({
-                error: "No valid fields provided",
-                details: {
-                    message: "Request body does not contain any valid fields for this role."
-                }
+            throw new AppError("invalidFieldsException", {
+                dynamicMessage: `Request body does not contain any valid fields for this role.`
             });
         }
 

@@ -1,4 +1,4 @@
-import { ErrorConfig, ErrorType, ErrorDetails } from '@/utils/error_handler/errorConfig';
+import { ErrorConfig, ErrorType, ErrorDetails } from '@/utils/error_handler/ErrorConfig';
 
 class AppError extends Error {
   public code!: string;

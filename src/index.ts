@@ -16,6 +16,26 @@ const PORT = 8085;
 // Add this middleware to handle JSON request bodies
 app.use(express.json());
 
+
+// Middleware to log responses before sending them
+// app.use((req, res, next) => {
+//   // Create a variable to capture the original send function
+//   const originalSend = res.send;
+
+//   // Override the send function to log the response before sending
+//   res.send = function (body: any) {
+//     console.log('Response:', {
+//       statusCode: res.statusCode,
+//       body: body
+//     });
+
+//     // Call the original send function to send the response to the client
+//     originalSend.call(res, body);
+//   };
+
+//   next();
+// });
+
 // Basic route for testing the server
 app.get('/', (req, res) => {
   res.send('Hello, TypeScript with Express and Socket.IO!');
