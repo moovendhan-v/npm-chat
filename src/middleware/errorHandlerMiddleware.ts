@@ -37,7 +37,8 @@ const errorHandlerMiddleware = (
         errorType: errorDetail.type,
         userRole: req.user?.role || 'unknown',
         attemptedPath: req?.originalUrl || "unknown",
-        dynamicErrMessage: dynamicMessage // The full error message with dynamic values
+        dynamicErrMessage: dynamicMessage, // The full error message with dynamic values
+        validationErrors: err.validationErrors || []
       }
     });
   }

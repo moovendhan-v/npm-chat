@@ -6,11 +6,13 @@ class AppError extends Error {
   public status!: string;
   public isOperational!: boolean;
   public dynamicMessage?: string;
+  public validationErrors?: { field: string; message: string }[];
 
-  constructor(type: ErrorType, { dynamicMessage }: { dynamicMessage?: string } = {}) {
+  constructor(type: ErrorType, { dynamicMessage, validationErrors }: { dynamicMessage?: string, validationErrors?: { field: string; message: string }[] } = {}) {
     super('An error occurred');
 
     this.dynamicMessage = dynamicMessage;
+    this.validationErrors = validationErrors;
     this.initialize(type).catch((err) => {
       this.message = 'Unknown error occurred.';
       this.code = '500';
@@ -32,7 +34,12 @@ class AppError extends Error {
         this.isOperational = true;
         Error.captureStackTrace(this, this.constructor);
       } else {
-        throw new Error('Invalid error type.');
+        // In case no specific error details are found in ErrorConfig, use a fallback
+        this.message = 'Unknown error occurred.';
+        this.code = '500';
+        this.type = 'UnknownError';
+        this.status = 'Server Error';
+        this.isOperational = true;
       }
     } catch (error) {
       this.message = 'Unknown error occurred.';

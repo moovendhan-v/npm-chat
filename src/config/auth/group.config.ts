@@ -2,6 +2,7 @@ export const createGroups = Object.freeze({
     method: "POST",
     path: "/groups",
     apiAllowedRole: ["admin", "manager", "user"],
+    validateSchema: undefined,
     roles: {
         admin: {
             allowedFields: ["id", "admins", "name", "members"]

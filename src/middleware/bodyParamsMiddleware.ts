@@ -1,17 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthConfig } from "@/config/auth/config";
 import AppError from "@/utils/AppError";
+import { validatePayload } from "@/utils/PayloadValidations";
 
 const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const path = req.originalUrl.split('?')[0];
     const userRole = req.user?.role || 'guest';
+    const method = req.method;
 
     console.debug(`Request received - Method: ${req.method}, Path: ${path}, Role: ${userRole}`);
 
-    // Find the matching endpoint based on the path
-    const endpointKey = Object.keys(AuthConfig.endpoints).find((key) =>
-        path.includes(AuthConfig.endpoints[key as keyof typeof AuthConfig.endpoints].path)
-    );
+    // Find the matching endpoint based on the path and method
+    const endpointKey = Object.keys(AuthConfig.endpoints).find((key) => {
+        const endpoint = AuthConfig.endpoints[key as keyof typeof AuthConfig.endpoints];
+        return path.includes(endpoint.path) && endpoint.method === method;
+    });
 
     if (!endpointKey) {
         // Invalid endpoint error
@@ -40,6 +43,11 @@ const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFu
     if (req.method === 'POST' || req.method === 'PUT') {
         const requestBody = req.body as Record<string, unknown>;
 
+        console.log("Validating payload ......", requestBody);
+        if(endpointConfig.validateSchema){
+            validatePayload(endpointConfig.validateSchema, requestBody)
+        }
+
         // Identify invalid fields in the request body
         const invalidFields = Object.keys(requestBody).filter(key => !allowedFields.includes(key));
 
@@ -64,6 +72,8 @@ const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFu
 
         // Replace request body with the sanitized version
         req.body = sanitizedBody;
+
+
         console.debug("Sanitized Body:", req.body);
     }
 

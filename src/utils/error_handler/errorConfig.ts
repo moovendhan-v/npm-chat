@@ -1,4 +1,4 @@
-export type ErrorType = 'TooManyRequest' | 'NotFound' | 'InternalServerError' | 'Unauthorized' | 'UserRoleNotAllowed' | 'InvalidEndpoint' | 'RoleFieldRestriction' | 'invalidFieldsException';
+export type ErrorType = 'TooManyRequest' | 'NotFound' | 'InternalServerError' | 'Unauthorized' | 'UserRoleNotAllowed' | 'InvalidEndpoint' | 'RoleFieldRestriction' | 'invalidFieldsException' | 'PayloadValidationFailed';
 
 // ErrorDetails interface
 export interface ErrorDetails {
@@ -48,6 +48,11 @@ export const ErrorConfig: Record<ErrorType, ErrorDetails> = {
     message: 'The provided fields in the request are not allowed for the user role or are invalid.',
     code: '400',
     type: 'invalidFieldsException',
+  },
+  PayloadValidationFailed: {
+    message: 'Please check your input',
+    code: '400',
+    type: 'PayloadValidationFailed',
   },
 };
 
