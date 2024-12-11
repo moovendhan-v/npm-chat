@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthConfig } from "@/config/auth/config";
+import AppError from "@/utils/AppError";
 
 const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const path = req.originalUrl.split('?')[0];
@@ -13,32 +14,28 @@ const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFu
     );
 
     if (!endpointKey) {
-        return res.status(400).json({ error: "Invalid endpoint" });
+        throw new AppError("InvalidEndpoint");
     }
 
     const endpointConfig = AuthConfig.endpoints[endpointKey as keyof typeof AuthConfig.endpoints];
 
     // Verify if the user's role is allowed for the endpoint
     if (!endpointConfig.apiAllowedRole.includes(userRole)) {
-        return res.status(403).json({
-            error: "You are not authorised to perform this action",
-            details: {
-                errorType: "UserRoleNotAllowed",
-                message: `User role '${userRole}' is not authorised to access '${path}'.`
+        throw new AppError("UserRoleNotAllowed",
+            {
+                dynamicMessage: `User role {role} has no allowed to access is {path}`
             }
-        });
+        );
     }
 
     const allowedFields: string[] = endpointConfig.roles[userRole as keyof typeof endpointConfig.roles]?.allowedFields || [];
 
     if (allowedFields.length === 0) {
-        return res.status(403).json({
-            error: "No fields available for this role",
-            details: {
-                errorType: "RoleFieldRestriction",
-                message: `User role '${userRole}' has no allowed fields for '${path}'.`
+        throw new AppError("RoleFieldRestriction",
+            {
+                dynamicMessage: `User role '${userRole}' has no allowed fields for '${path}'.`
             }
-        });
+        );
     }
 
     if (req.method === 'POST' || req.method === 'PUT') {
