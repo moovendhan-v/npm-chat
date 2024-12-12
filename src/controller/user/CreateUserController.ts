@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import CreateUserService from '@/service/user/CreateUserService';
 import { CreateUserInput } from "@/types/CreateUser";
-import { handlePrismaError } from "@/utils/error_handler/prismaErrorHandler";
+import { throwDatabaseError } from "@/utils/DatabaseError";
 
 class CreateUsersController {
     private service: CreateUserService = new CreateUserService();
@@ -18,10 +18,12 @@ class CreateUsersController {
         } catch (error: any) {
             console.error(error);
 
-            const prismaError = handlePrismaError(error);
-            if (prismaError) {
-                return res.status(prismaError.statusCode).json(prismaError);
-            }
+            throwDatabaseError(error);
+
+            // const prismaError = handlePrismaError(error);
+            // if (prismaError) {
+            //     return res.status(prismaError.statusCode).json(prismaError);
+            // }
 
             res.status(500).json({ error: "Internal server error" });
         }

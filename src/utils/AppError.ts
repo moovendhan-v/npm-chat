@@ -1,4 +1,5 @@
 import { ErrorConfig, ErrorType, ErrorDetails } from '@/utils/error_handler/ErrorConfig';
+import { ErrorType as DatabaseErrorType } from '@/utils/error_handler/DatabaseErrorConfig';
 
 class AppError extends Error {
   public code!: string;
@@ -8,12 +9,16 @@ class AppError extends Error {
   public dynamicMessage?: string;
   public validationErrors?: { field: string; message: string }[];
 
-  constructor(type: ErrorType, { dynamicMessage, validationErrors }: { dynamicMessage?: string, validationErrors?: { field: string; message: string }[] } = {}) {
+  constructor(
+    type: ErrorType | DatabaseErrorType,
+    config: Record<string, ErrorDetails>, // Accepts the configuration object
+    { dynamicMessage, validationErrors }: { dynamicMessage?: string; validationErrors?: { field: string; message: string }[] } = {}
+  ) {
     super('An error occurred');
 
     this.dynamicMessage = dynamicMessage;
     this.validationErrors = validationErrors;
-    this.initialize(type).catch((err) => {
+    this.initialize(type, config).catch((err) => {
       this.message = 'Unknown error occurred.';
       this.code = '500';
       this.type = 'UnknownError';
@@ -23,9 +28,9 @@ class AppError extends Error {
     });
   }
 
-  private async initialize(type: ErrorType): Promise<void> {
+  private async initialize(type: ErrorType | DatabaseErrorType, config: Record<string, ErrorDetails>): Promise<void> {
     try {
-      const errorDetails = await AppError.loadErrorConfig(type);
+      const errorDetails = await AppError.loadErrorConfig(type, config);
       if (errorDetails) {
         this.message = this.dynamicMessage || errorDetails.message;
         this.code = errorDetails.code;
@@ -34,7 +39,7 @@ class AppError extends Error {
         this.isOperational = true;
         Error.captureStackTrace(this, this.constructor);
       } else {
-        // In case no specific error details are found in ErrorConfig, use a fallback
+        // Fallback
         this.message = 'Unknown error occurred.';
         this.code = '500';
         this.type = 'UnknownError';
@@ -50,9 +55,9 @@ class AppError extends Error {
     }
   }
 
-  static async loadErrorConfig(type: ErrorType): Promise<ErrorDetails | null> {
+  static async loadErrorConfig(type: ErrorType | DatabaseErrorType, config: Record<string, ErrorDetails>): Promise<ErrorDetails | null> {
     try {
-      return ErrorConfig[type] || null;
+      return config[type] || null;
     } catch (error) {
       console.error('Error loading error config:', error);
       return null;

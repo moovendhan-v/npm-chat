@@ -1,8 +1,12 @@
 {
-  "watch": ["src"],
+  "watch": ["src/**/*.ts", "src/**/*.json"],
   "ext": "ts,json",
-  "ignore": ["node_modules"],
-  "exec": "npx tsx --inspect --trace-deprecation src/index.ts",
+  "ignore": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "node_modules"
+  ],
+  "exec": "npx tsx --inspect --trace-deprecation --env-file=.env src/index.ts",
   "env": {
     "NODE_ENV": "development"
   }

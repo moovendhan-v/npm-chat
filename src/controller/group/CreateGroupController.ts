@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import CreateGroupService from '@/service/group/CreateGroupService';
+import { throwDatabaseError } from "@/utils/DatabaseError";
 
 class CreateGroupController {
   private service: CreateGroupService = new CreateGroupService();
 
-  public createGroup = async (req: Request, res: Response): Promise<void> => {
+  public createGroup = async (req: Request, res: Response) => {
     try {
       const { name, admins, members } = req.body;
-      
+
       console.log("req.body", req.body)
       // TODO: Hanle this validations using zod
       if (!name || typeof name !== 'string') {
@@ -34,7 +35,7 @@ class CreateGroupController {
       res.status(201).json({ message: 'Group created successfully.', group });
     } catch (error) {
       console.error('Error creating group:', error);
-      res.status(500).json({ error: 'Failed to create group. Please try again.' });
+      throwDatabaseError(error);
     }
   };
 }
