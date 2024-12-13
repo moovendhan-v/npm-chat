@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import CreateGroupService from '@/service/group/CreateGroupService';
-import { throwDatabaseError } from "@/utils/DatabaseError";
+import DatabaseError from "@/utils/DatabaseError";
 
 class CreateGroupController {
   private service: CreateGroupService = new CreateGroupService();
@@ -35,7 +35,7 @@ class CreateGroupController {
       res.status(201).json({ message: 'Group created successfully.', group });
     } catch (error) {
       console.error('Error creating group:', error);
-      throwDatabaseError(error);
+      // throwDatabaseError(error);
     }
   };
 }

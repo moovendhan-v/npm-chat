@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import AppError from "@/utils/AppError"; // Adjust the import path as needed
-import { ErrorConfig, ErrorType } from "@/utils/error_handler/ErrorConfig"; // Import error config
+import AppError from "@/utils/AppError"
+import { ErrorConfig, ErrorType } from "@/utils/error_handler/errorConfig";
+import DatabaseError from "@/utils/DatabaseError";
+import { ErrorType as PrismaErrorType } from "@/utils/error_handler/prismaErrorHandler";
+import { ErrorConfig as PrismaErrorConfig } from "@/utils/error_handler/databaseErrorConfig";
+
 
 const errorHandlerMiddleware = (
   err: unknown,
@@ -8,27 +12,22 @@ const errorHandlerMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("ErrorMiddleware", err);
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  console.log("ErrorMiddleware Triggred");
 
   // Check if the error is an instance of AppError
   if (err instanceof AppError) {
-    // Log error for debugging purposes
+    console.log("App error triggred")
     const errorType = err.type as ErrorType;
+    const errorDetail = ErrorConfig[errorType as keyof typeof ErrorConfig] || ErrorConfig['InternalServerError'];
 
-    // Ensure the errorType is a valid key in ErrorConfig
-    const errorDetail = ErrorConfig[errorType] || ErrorConfig['InternalServerError'];
-    console.log("errorDetail", errorDetail);
-
-    // Use dynamic message if provided, otherwise fallback to the message from ErrorConfig
     let dynamicMessage = err.dynamicMessage || errorDetail.message;
-
-    // Dynamic message creation with placeholders for role and attempted path
     dynamicMessage = dynamicMessage.replace('{role}', req.user?.role || 'unknown')
       .replace('{path}', req.originalUrl);
 
-    console.log("dynamicMessage", dynamicMessage);
-
-    // Prepare the response
     return res.status(parseInt(errorDetail.code, 10) || 500).json({
       status: "error",
       code: errorDetail.code,
@@ -37,15 +36,43 @@ const errorHandlerMiddleware = (
         errorType: errorDetail.type,
         userRole: req.user?.role || 'unknown',
         attemptedPath: req?.originalUrl || "unknown",
-        dynamicErrMessage: dynamicMessage, // The full error message with dynamic values
+        dynamicErrMessage: dynamicMessage,
         validationErrors: err.validationErrors || []
       }
     });
   }
 
-  // Handle unexpected errors
+  if (err instanceof DatabaseError) {
+    console.log("Error handler middlware triggred")
+    const errorType = err.type as PrismaErrorType;
+    const errorDetail = PrismaErrorConfig[errorType as keyof typeof PrismaErrorConfig] || PrismaErrorConfig['InternalServerError'];
+
+    let dynamicMessage = err.dynamicMessage || errorDetail.message;
+    dynamicMessage = dynamicMessage.replace('{role}', req.user?.role || 'unknown')
+      .replace('{path}', req.originalUrl);
+
+    const errorPayload = {
+      status: "error",
+      code: errorDetail.code,
+      message: errorDetail.message,
+      details: {
+        errorType: errorDetail.type,
+        userRole: req.user?.role || 'unknown',
+        attemptedPath: req?.originalUrl || "unknown",
+        dynamicErrMessage: dynamicMessage,
+        validationErrors: err.validationErrors || []
+      }
+    };
+    
+    console.log("errorpayload", errorPayload)
+
+    return res.status(parseInt(errorDetail.code, 10) || 400).json(errorPayload);
+  }
+
   console.error("Unknown error:", err);
-  res.status(500).json({
+
+  // Default response for unexpected errors
+  return res.status(500).json({
     status: "error",
     code: 5001,
     message: "An unexpected error occurred.",
