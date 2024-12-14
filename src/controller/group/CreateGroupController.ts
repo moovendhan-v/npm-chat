@@ -1,30 +1,17 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import CreateGroupService from '@/service/group/CreateGroupService';
 import DatabaseError from "@/utils/DatabaseError";
+import { handlePrismaError } from '@/utils/error_handler/prismaErrorHandler';
+import AppError from '@/utils/AppError';
 
 class CreateGroupController {
   private service: CreateGroupService = new CreateGroupService();
 
-  public createGroup = async (req: Request, res: Response) => {
+  public createGroup = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name, admins, members } = req.body;
 
       console.log("req.body", req.body)
-      // TODO: Hanle this validations using zod
-      if (!name || typeof name !== 'string') {
-        res.status(400).json({ error: 'Group name is required and must be a string.' });
-        return;
-      }
-
-      if (admins && !Array.isArray(admins)) {
-        res.status(400).json({ error: 'Admins must be an array of user IDs.' });
-        return;
-      }
-
-      if (members && !Array.isArray(members)) {
-        res.status(400).json({ error: 'Members must be an array of user IDs.' });
-        return;
-      }
 
       const group = await this.service.createGroup({
         name,
@@ -35,7 +22,14 @@ class CreateGroupController {
       res.status(201).json({ message: 'Group created successfully.', group });
     } catch (error) {
       console.error('Error creating group:', error);
-      // throwDatabaseError(error);
+
+      const prismaError = handlePrismaError(error);
+      console.log("prismaError", prismaError)
+      if (prismaError) {
+        return next(new DatabaseError({ errorType: prismaError.errorType }));
+      }
+
+      return next(new AppError('InternalServerError'));
     }
   };
 }

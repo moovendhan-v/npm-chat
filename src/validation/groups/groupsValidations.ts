@@ -9,7 +9,10 @@ export const groupCreationSchema = z.object({
             message: "Group name can only contain letters, numbers, spaces, and hyphens"
         }),
 
-    admins: z.array(z.string())
+    admins: z.array(
+        z.string()
+            .uuid({ message: "Each admin ID must be a valid UUID" })
+    )
         .min(1, { message: "At least one admin is required" })
         .max(5, { message: "Maximum 5 admins allowed" })
         .refine(
@@ -17,7 +20,10 @@ export const groupCreationSchema = z.object({
             { message: "Duplicate admin IDs are not allowed" }
         ),
 
-    members: z.array(z.string())
+    members: z.array(
+        z.string()
+            .uuid({ message: "Each member ID must be a valid UUID" })
+    )
         .min(1, { message: "At least one member is required" })
         .max(50, { message: "Maximum 50 members allowed" })
         .refine(

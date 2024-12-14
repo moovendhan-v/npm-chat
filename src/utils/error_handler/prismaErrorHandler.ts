@@ -15,7 +15,8 @@ export type ErrorType =
   | 'ValueTooLongException'
   | 'ConstraintViolationException'
   | 'MissingFieldException'
-  | 'QueryParameterException';
+  | 'QueryParameterException'
+  | 'InvalidIdentifierException';
 
 // Define PrismaError with a nullable ErrorType to match the error code mapping
 type PrismaError = {
@@ -43,6 +44,8 @@ export function handlePrismaError(error: any): PrismaError | null {
             return { errorType: 'MissingFieldException' };
         case 'P2013':
             return { errorType: 'QueryParameterException' };
+        case 'P2023':
+            return { errorType: "InvalidIdentifierException"}
         default:
             return { errorType: null }; // No match for error code
     }

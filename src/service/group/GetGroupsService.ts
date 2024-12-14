@@ -1,9 +1,27 @@
-import prisma from '@/prisma/prismaClient'
+import prisma from '@/prisma/prismaClient';
+import { UserFilters, RequestOptions, } from "@/types/GetUsesType";
 
-class GetGroupsService {
-  async GetAllGroups() {
-    return await prisma.group.findMany();
+class GetUsersService {
+
+  async getGroupsDetails(filters: UserFilters = {}) {
+    const { id } = filters;
+    const where: any = {};
+    if (id) where.id = id;
+
+    return await prisma.group.findMany({ where });
   }
+
+  async getAllGroupDetails(options: RequestOptions) {
+    const { pagination, select } = options;
+
+    const allGroups = await prisma.group.findMany({
+      ...pagination,
+      select
+    })
+
+    return allGroups;
+  }
+
 }
 
-export default GetGroupsService;
+export default GetUsersService;

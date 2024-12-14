@@ -1,5 +1,5 @@
 import { getUsers, getAllUsers, createUser } from "@/config/auth/user.config";
-import { createGroups } from "@/config/auth/group.config"
+import { createGroups, getGroups, getAllGroups } from "@/config/auth/group.config"
 
 // Define your endpoints in a centralized way
 export const AuthConfig = Object.freeze({
@@ -7,6 +7,8 @@ export const AuthConfig = Object.freeze({
         getUsers,
         createUser,
         createGroups,
-        getAllUsers
+        getAllUsers,
+        getGroups,
+        getAllGroups
     },
 });
