@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import CreateGroupService from '@/service/group/CreateGroupService';
-import DatabaseError from "@/utils/DatabaseError";
-import { handlePrismaError } from '@/utils/error_handler/prismaErrorHandler';
 import AppError from '@/utils/AppError';
 
 class CreateGroupController {
@@ -21,14 +19,7 @@ class CreateGroupController {
 
       res.status(201).json({ message: 'Group created successfully.', group });
     } catch (error) {
-      console.error('Error creating group:', error);
-
-      const prismaError = handlePrismaError(error);
-      console.log("prismaError", prismaError)
-      if (prismaError) {
-        return next(new DatabaseError({ errorType: prismaError.errorType }));
-      }
-
+      next(error);
       return next(new AppError('InternalServerError'));
     }
   };

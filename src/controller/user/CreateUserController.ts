@@ -17,18 +17,8 @@ class CreateUsersController {
             return res.status(200).json(users);
 
         } catch (error: any) {
-
-            // Handle Prisma-specific errors
-            const prismaError = handlePrismaError(error);
-            console.log("prismaError", prismaError)
-            if(prismaError){
-                return next(new DatabaseError({errorType: prismaError.errorType}));
-            }
-            
-            // Pass the error to the error handler middleware
-            return next(new AppError('InternalServerError', {
-                dynamicMessage: error.message,
-            }));
+            next(error);
+            return next(new AppError('InternalServerError'));
         }
     };
 }

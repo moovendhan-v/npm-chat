@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import AppError from "@/utils/AppError"
+import AppError from "@/utils/AppError";
 import { ErrorConfig, ErrorType } from "@/utils/error_handler/errorConfig";
 import DatabaseError from "@/utils/DatabaseError";
-import { ErrorType as PrismaErrorType } from "@/utils/error_handler/prismaErrorHandler";
+import { handlePrismaError, PrismaError } from "@/utils/error_handler/prismaErrorHandler";
 import { ErrorConfig as PrismaErrorConfig } from "@/utils/error_handler/databaseErrorConfig";
-
 
 const errorHandlerMiddleware = (
   err: unknown,
@@ -16,17 +15,46 @@ const errorHandlerMiddleware = (
     return next(err);
   }
 
-  console.log("ErrorMiddleware Triggred");
+  // Narrowing `err` for Prisma-specific errors
+  const prismaError: PrismaError | null = handlePrismaError(err);
+  console.log("prismaError", prismaError);
 
-  // Check if the error is an instance of AppError
+  if (prismaError?.errorType) {
+    console.log("Prisma error triggered");
+
+    if (typeof prismaError === "object" && prismaError !== null && "errorType" in prismaError) {
+      const errorType = (prismaError as { errorType: keyof typeof PrismaErrorConfig }).errorType || "InternalServerError";
+      const errorDetail = PrismaErrorConfig[errorType] || PrismaErrorConfig["InternalServerError"];
+
+      let dynamicMessage = errorDetail.message
+        .replace("{role}", req.user?.role || "unknown")
+        .replace("{path}", req.originalUrl);
+
+      return res.status(parseInt(errorDetail.code, 10) || 400).json({
+        status: "error",
+        code: errorDetail.code,
+        message: errorDetail.message,
+        details: {
+          errorType: errorDetail.type,
+          userRole: req.user?.role || "unknown",
+          attemptedPath: req.originalUrl,
+          dynamicErrMessage: dynamicMessage,
+          validationErrors: (prismaError as { validationErrors?: unknown[] }).validationErrors || [],
+        },
+      });
+    }
+  }
+
+  // Narrowing `err` for AppError
   if (err instanceof AppError) {
-    console.log("App error triggred")
+    console.log("AppError triggered");
     const errorType = err.type as ErrorType;
-    const errorDetail = ErrorConfig[errorType as keyof typeof ErrorConfig] || ErrorConfig['InternalServerError'];
+    const errorDetail = ErrorConfig[errorType] || ErrorConfig["InternalServerError"];
 
     let dynamicMessage = err.dynamicMessage || errorDetail.message;
-    dynamicMessage = dynamicMessage.replace('{role}', req.user?.role || 'unknown')
-      .replace('{path}', req.originalUrl);
+    dynamicMessage = dynamicMessage
+      .replace("{role}", req.user?.role || "unknown")
+      .replace("{path}", req.originalUrl);
 
     return res.status(parseInt(errorDetail.code, 10) || 500).json({
       status: "error",
@@ -34,39 +62,39 @@ const errorHandlerMiddleware = (
       message: errorDetail.message,
       details: {
         errorType: errorDetail.type,
-        userRole: req.user?.role || 'unknown',
-        attemptedPath: req?.originalUrl || "unknown",
+        userRole: req.user?.role || "unknown",
+        attemptedPath: req.originalUrl,
         dynamicErrMessage: dynamicMessage,
-        validationErrors: err.validationErrors || []
-      }
+        validationErrors: err.validationErrors || [],
+      },
     });
   }
 
   if (err instanceof DatabaseError) {
-    console.log("Error handler middlware triggred")
-    const errorType = err.type as PrismaErrorType;
-    const errorDetail = PrismaErrorConfig[errorType as keyof typeof PrismaErrorConfig] || PrismaErrorConfig['InternalServerError'];
+    console.log("Database error triggered");
 
-    let dynamicMessage = err.dynamicMessage || errorDetail.message;
-    dynamicMessage = dynamicMessage.replace('{role}', req.user?.role || 'unknown')
-      .replace('{path}', req.originalUrl);
+    if (typeof err === "object" && err !== null && "type" in err) {
+      const errorType = (err as { type: keyof typeof PrismaErrorConfig }).type;
+      const errorDetail = PrismaErrorConfig[errorType] || PrismaErrorConfig["InternalServerError"];
 
-    const errorPayload = {
-      status: "error",
-      code: errorDetail.code,
-      message: errorDetail.message,
-      details: {
-        errorType: errorDetail.type,
-        userRole: req.user?.role || 'unknown',
-        attemptedPath: req?.originalUrl || "unknown",
-        dynamicErrMessage: dynamicMessage,
-        validationErrors: err.validationErrors || []
-      }
-    };
-    
-    console.log("errorpayload", errorPayload)
+      let dynamicMessage = err.dynamicMessage || errorDetail.message;
+      dynamicMessage = dynamicMessage
+        .replace("{role}", req.user?.role || "unknown")
+        .replace("{path}", req.originalUrl);
 
-    return res.status(parseInt(errorDetail.code, 10) || 400).json(errorPayload);
+      return res.status(parseInt(errorDetail.code, 10) || 400).json({
+        status: "error",
+        code: errorDetail.code,
+        message: errorDetail.message,
+        details: {
+          errorType: errorDetail.type,
+          userRole: req.user?.role || "unknown",
+          attemptedPath: req.originalUrl,
+          dynamicErrMessage: dynamicMessage,
+          validationErrors: err.validationErrors || [],
+        },
+      });
+    }
   }
 
   console.error("Unknown error:", err);

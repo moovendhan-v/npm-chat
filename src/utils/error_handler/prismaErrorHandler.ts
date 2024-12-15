@@ -19,7 +19,7 @@ export type ErrorType =
   | 'InvalidIdentifierException';
 
 // Define PrismaError with a nullable ErrorType to match the error code mapping
-type PrismaError = {
+export type PrismaError = {
   errorType: ErrorType | null;
 };
 
