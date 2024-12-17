@@ -3,7 +3,7 @@ import {groupCreationSchema} from "@/validation/groups/groupsValidations"
 export const createGroups = Object.freeze({
     method: "POST",
     path: "/groups",
-    apiAllowedRole: ["admin", "manager", "user", "guest"],
+    apiAllowedRole: ["admin", "manager", "user"],
     validateSchema: groupCreationSchema,
     roles: {
         admin: {

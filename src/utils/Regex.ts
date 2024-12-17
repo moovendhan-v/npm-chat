@@ -1,4 +1,5 @@
 export interface RegexMeta {
+    regex: RegExp;
     description: string;
     example: string;
 }
@@ -7,9 +8,9 @@ export const RegexTypes = {
     objectIdRegex: {
         regex: /^[a-f\d]{24}$/i,
         meta: {
-            description: "validate the mongodb objects",
-            example: "6755c53f5d2f737f190d4df2"
-        }
+            description: "Validates MongoDB ObjectId",
+            example: "6755c53f5d2f737f190d4df2",
+        },
     },
     username: {
         regex: /^[a-zA-Z0-9_]{3,20}$/,
@@ -75,3 +76,5 @@ export const RegexTypes = {
         },
     },
 };
+
+export type RegexTypes = typeof RegexTypes;
