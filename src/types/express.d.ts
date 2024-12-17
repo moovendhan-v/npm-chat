@@ -1,20 +1,36 @@
 // src/types/express.d.ts
-import { Request } from 'express';
+import { Request } from "express";
+
+// Define reusable types
+interface Pagination {
+  skip: number;
+  take: number;
+}
+
+interface Select {
+  [key: string]: boolean;
+}
+
+type UserRole = "admin" | "manager" | "user" | "guest";
+
+export type RequestOptions = {
+  pagination: Pagination;
+  select: Select;
+  selectedFields: string[];
+}
 
 declare global {
   namespace Express {
     interface Request {
-      pagination?: {
-        skip: number;
-        take: number;
-      };
-      select?: { [key: string]: boolean };
+      pagination?: Pagination;
+      select?: Select;
       selectedFields?: string[];
+      options?: RequestOptions;
       user?: {
         id: string;
         name: string;
         email: string;
-        role: 'admin' | 'manager' | 'user' | 'guest';
+        role: UserRole;
       };
     }
   }

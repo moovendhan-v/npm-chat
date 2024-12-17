@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import GetGroupsService from '@/service/group/GetGroupsService';
-import { handlePrismaError } from '@/utils/error_handler/prismaErrorHandler';
-import DatabaseError from '@/utils/DatabaseError';
 import AppError from '@/utils/AppError';
 
 class GetGroupssController {
@@ -10,28 +8,14 @@ class GetGroupssController {
   getAllGroups = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
 
-      const pagination = req.pagination;
-      const selectedFields = req.selectedFields || [];
-      const select = req.select;
+      if (!req.options) throw new AppError('PayloadValidationFailed');
 
-      const options = { pagination, selectedFields, select };
-      const users = await this.service.getAllGroupDetails(options);
+      const users = await this.service.getAllGroupDetails(req.options);
 
       res.status(200).json(users);
 
     } catch (error: any) {
-      console.error(error);
-      // Handle Prisma-specific errors
-      const prismaError = handlePrismaError(error);
-      console.log("prismaError", prismaError)
-      if (prismaError) {
-        return next(new DatabaseError({ errorType: prismaError.errorType }));
-      }
-
-      // Pass the error to the error handler middleware
-      return next(new AppError('InternalServerError', {
-        dynamicMessage: error.message,
-      }));
+      next(error);
     }
   };
 
@@ -46,17 +30,7 @@ class GetGroupssController {
 
       res.status(200).json(users);
     } catch (error: any) {
-      // Handle Prisma-specific errors
-      const prismaError = handlePrismaError(error);
-      console.log("prismaError", prismaError)
-      if (prismaError) {
-        return next(new DatabaseError({ errorType: prismaError.errorType }));
-      }
-
-      // Pass the error to the error handler middleware
-      return next(new AppError('InternalServerError', {
-        dynamicMessage: error.message,
-      }));
+      next(error)
     }
   };
 

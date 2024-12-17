@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import CreateUserService from '@/service/user/CreateUserService';
 import { CreateUserInput } from "@/types/CreateUser";
-import { handlePrismaError } from "@/utils/error_handler/prismaErrorHandler";
-import AppError from '@/utils/AppError';
-import DatabaseError from '@/utils/DatabaseError';
 
 class CreateUsersController {
     private service: CreateUserService = new CreateUserService();
@@ -18,7 +15,6 @@ class CreateUsersController {
 
         } catch (error: any) {
             next(error);
-            return next(new AppError('InternalServerError'));
         }
     };
 }

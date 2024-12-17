@@ -52,6 +52,11 @@ const queryParamMiddleware = async (req: Request, res: Response, next: NextFunct
         // Set the final pagination and field selection options on the request object
         req.pagination = { skip, take };
         req.selectedFields = fields.length > 0 ? fields : allowedFields;
+        req.options = {
+            pagination: req.pagination,
+            selectedFields: req.selectedFields || "",
+            select: req.select || {}
+        }
 
         // Convert selected fields to Prisma's 'select' format
         const select = req.selectedFields.reduce((acc: { [key: string]: boolean }, field) => {

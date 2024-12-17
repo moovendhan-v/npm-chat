@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import CreateGroupService from '@/service/group/CreateGroupService';
-import AppError from '@/utils/AppError';
 
 class CreateGroupController {
   private service: CreateGroupService = new CreateGroupService();
@@ -20,7 +19,6 @@ class CreateGroupController {
       res.status(201).json({ message: 'Group created successfully.', group });
     } catch (error) {
       next(error);
-      return next(new AppError('InternalServerError'));
     }
   };
 }

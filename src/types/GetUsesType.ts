@@ -4,10 +4,20 @@ export interface UserFilters {
 }
 
 export type RequestOptions = {
-    pagination?: PaginationOptions;
-    selectedFields?: SelectedFields;
-    select?: { [key: string]: boolean };
+    pagination: Pagination;
+    select: Select;
+    selectedFields: string[];
 }
+
+type Pagination = {
+    skip: number;
+    take: number;
+}
+
+type Select = {
+    [key: string]: boolean;
+}
+
 
 export type PaginationOptions = {
     skip: number;
