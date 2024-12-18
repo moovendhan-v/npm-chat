@@ -4,12 +4,13 @@ import { z } from 'zod';
 export const groupCreationSchema = z.object({
   name: z.string()
     .trim()
+    .regex(RegexTypes.string.regex, {message: `Group Name ${RegexTypes.string.meta.description}`})
     .min(3, { message: "Group name must have at least 3 characters" })
     .max(20, { message: "Group name cannot exceed 20 characters" })
     .regex(/^[a-zA-Z0-9\s-]+$/, {
       message: "Group name can only contain letters, numbers, spaces, and hyphens"
     }),
-  
+
   admins: z.array(
     z.string()
       .regex(RegexTypes.objectIdRegex.regex, { message: "Each admin ID must be a valid ObjectId" })

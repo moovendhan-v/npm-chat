@@ -19,6 +19,13 @@ export const RegexTypes = {
             example: "moovendhan123",
         },
     },
+    string: {
+        regex: /^[a-zA-Z0-9\s-]*$/,
+        meta: {
+            description: "Contains only contain letters, numbers, spaces, and hyphens",
+            example: "moovendhan123",
+        },
+    },
     email: {
         regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         meta: {

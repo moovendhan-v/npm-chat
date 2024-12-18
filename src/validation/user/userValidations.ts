@@ -1,8 +1,10 @@
+import { RegexTypes } from '@/utils/Regex';
 import { z } from 'zod';
 
 export const userCreationSchema = z.object({
   userName: z
     .string()
+    .regex(RegexTypes.string.regex, {message: `User Name ${RegexTypes.string.meta.description}`})
     .min(3, { message: "Username must be at least 3 characters long" })
     .max(30, { message: "Username must be at most 30 characters long" }),
   email: z
