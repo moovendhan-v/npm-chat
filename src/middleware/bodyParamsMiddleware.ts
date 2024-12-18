@@ -24,6 +24,8 @@ const bodyFieldValidationMiddleware = (req: Request, res: Response, next: NextFu
         const endpoint = AuthConfig.endpoints[key as keyof typeof AuthConfig.endpoints];
         return path.includes(endpoint.path) && endpoint.method === method;
     });
+
+    console.log("endpointKey", endpointKey)
     
     if (!endpointKey) {
         throw new AppError("InvalidEndpoint");

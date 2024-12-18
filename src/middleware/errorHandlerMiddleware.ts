@@ -26,9 +26,9 @@ const logErrorDetails = (err: unknown, prismaError: PrismaError | null) => {
   // if (err && typeof err === 'object') {
   //   console.error("Error Object Properties:", Object.keys(err));
   // }
-  
+
   console.error("Error Type:", err?.constructor?.name);
-  
+
   // Log error instance properties
   if (err instanceof Error) {
     console.error("Error Name:", err.name);

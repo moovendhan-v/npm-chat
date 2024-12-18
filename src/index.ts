@@ -6,6 +6,7 @@ import userRouter from '@/router/user/UsersRoute';
 import groupRouter from '@/router/group/GroupRoutes';
 import {Env} from "./config/Env";
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware';
+import channelRouter from './router/channel/ChannelRouts';
 
 console.log(Env);
 
@@ -44,6 +45,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/users', userRouter);
 app.use('/groups', groupRouter);
+app.use('/channels', channelRouter);
 
 // Enable CORS with configuration
 app.use(cors({

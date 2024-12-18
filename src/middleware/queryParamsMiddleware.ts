@@ -24,24 +24,17 @@ const queryParamMiddleware = async (req: Request, res: Response, next: NextFunct
             return path === endpoint.path && endpoint.method === req.method;
         });
 
-        if (!endpoint) {
-            throw new AppError('InvalidEndpoint');
-        }
+        if (!endpoint) throw new AppError('InvalidEndpoint');
 
         // Extract endpoint config and assert that it's a valid key
         const endpointConfig = AuthConfig.endpoints[endpoint as keyof typeof AuthConfig.endpoints];
 
-        if (!endpointConfig.apiAllowedRole.includes(userRole)) {
-            console.log("Unauthrised Access ::")
-            throw new AppError('Unauthorized');
-        }
+        if (!endpointConfig.apiAllowedRole.includes(userRole)) throw new AppError('Unauthorized');
 
         // Assert that userRole is a valid role
         const allowedFields: AllowedFields = endpointConfig.roles[userRole as keyof typeof endpointConfig.roles]?.allowedFields || [];
 
-        if (allowedFields.length === 0) {
-            throw new AppError('invalidFieldsException');
-        }
+        if (allowedFields.length === 0) throw new AppError('invalidFieldsException');
 
         // Parse 'fields' query param if exists
         let fields: string[] = [];

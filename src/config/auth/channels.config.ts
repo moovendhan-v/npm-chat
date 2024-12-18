@@ -1,22 +1,22 @@
-import {groupCreationSchema} from "@/validation/groups/groupsValidations"
+import {channelCreationSchema} from "@/validation/channels/channelsValidations"
 
 export const createChannels = Object.freeze({
     method: "POST",
     path: "/channels",
     apiAllowedRole: ["admin", "manager", "user", "guest"],
-    validateSchema: groupCreationSchema,
+    validateSchema: channelCreationSchema,
     roles: {
         admin: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         manager: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         user: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         guest: {
-            allowedFields: ["id", "admins", "name", "members", "guest"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         }
     }
 });
@@ -25,37 +25,37 @@ export const getChannels = Object.freeze({
     method: "GET",
     path: "/channels",
     apiAllowedRole: ["admin", "manager", "user", "guest"],
-    validateSchema: groupCreationSchema,
+    validateSchema: channelCreationSchema,
     roles: {
         admin: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         manager: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         user: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         guest: {
-            allowedFields: ["id", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         }
     }
 });
 
-export const getAllGroups = Object.freeze({
+export const getAllChannels = Object.freeze({
     method: "GET",
     path: "/groups/all",
     apiAllowedRole: ["admin", "manager", "user", "guest"],
-    validateSchema: groupCreationSchema,
+    validateSchema: channelCreationSchema,
     roles: {
         admin: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         manager: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         user: {
-            allowedFields: ["id", "admins", "name", "members"]
+            allowedFields: ["userId", "description", "name", "isAdmin"]
         },
         guest: {
             allowedFields: ["id", "name", "members"]

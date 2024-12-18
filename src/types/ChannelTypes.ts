@@ -12,7 +12,7 @@ export type ChannelParticipant = {
     isAdmin: boolean;
 }
 
-export type InsertChannelServiceInput = {
+export type CreateChannelServiceInput = {
     name: string;
     description: string;
     userId: string;
@@ -20,7 +20,7 @@ export type InsertChannelServiceInput = {
 }
 
 export type ChatService = {
-    createChannel(input: InsertChannelServiceInput): Promise<Channel>;
+    createChannel(input: CreateChannelServiceInput): Promise<Channel>;
     addParticipant(
         userId: string,
         channelId: string,
