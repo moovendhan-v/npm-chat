@@ -25,7 +25,7 @@ export const getChannels = Object.freeze({
     method: "GET",
     path: "/channels",
     apiAllowedRole: ["admin", "manager", "user", "guest"],
-    validateSchema: channelCreationSchema,
+    validateSchema: undefined,
     roles: {
         admin: {
             allowedFields: ["userId", "description", "name", "isAdmin"]
@@ -46,7 +46,7 @@ export const getAllChannels = Object.freeze({
     method: "GET",
     path: "/groups/all",
     apiAllowedRole: ["admin", "manager", "user", "guest"],
-    validateSchema: channelCreationSchema,
+    validateSchema: undefined,
     roles: {
         admin: {
             allowedFields: ["userId", "description", "name", "isAdmin"]

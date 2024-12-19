@@ -4,11 +4,11 @@ import helmet from 'helmet';
 import { setupSocketServer } from './config/ws-server';
 import userRouter from '@/router/user/UsersRoute';
 import groupRouter from '@/router/group/GroupRoutes';
-import {Env} from "./config/Env";
+// import {Env} from "./config/Env";
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware';
 import channelRouter from './router/channel/ChannelRouts';
 
-console.log(Env);
+// console.log(Env);
 
 // Create an Express application
 const app = express();

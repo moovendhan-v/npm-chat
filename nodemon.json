@@ -6,8 +6,11 @@
     "src/**/*.test.ts",
     "node_modules"
   ],
-  "exec": "npx tsx --inspect --trace-deprecation --env-file=.env src/index.ts",
+  "exec": "ts-node ./src/index.ts",
   "env": {
     "NODE_ENV": "development"
-  }
+  },
+  "verbose": true,
+  "pollingInterval": 500,
+  "legacyWatch": false
 }
