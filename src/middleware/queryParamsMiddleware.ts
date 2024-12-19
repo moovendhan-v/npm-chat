@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AuthConfig } from "@/config/auth/config";
+import { AuthConfig } from "@/validation/config";
 import AppError from "@/utils/AppError";
 
 // Type definition for the allowed fields

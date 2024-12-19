@@ -1,6 +1,6 @@
-import { getUsers, getAllUsers, createUser } from "@/config/auth/user.config";
-import { createGroups, getGroups, getAllGroups } from "@/config/auth/group.config";
-import { createChannels, getAllChannels, getChannels } from "@/config/auth/channels.config";
+import { getUsers, getAllUsers, createUser } from "@/validation/user/user.config";
+import { createGroups, getGroups, getAllGroups } from "@/validation/groups/group.config";
+import { createChannels, getAllChannels, getChannels } from "@/validation/channels/channels.config";
 
 // Define your endpoints in a centralized way
 export const AuthConfig = Object.freeze({
