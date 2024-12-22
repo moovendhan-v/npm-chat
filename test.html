@@ -50,8 +50,23 @@
   </div>
 
   <script>
-    // Connect to the Socket.IO server
-    const socket = io('http://localhost:8085');
+    // Check if userId is available in local storage
+    let userId = localStorage.getItem('userId');
+    const apiKey = 'pkK11BosNhgqTZwJ4UvyGJF3UcGPNsWl4EkOPeENuX1Qyj+kOVromKesOz1DMBFY'; // Replace with your actual API key
+
+    if (!userId) {
+      userId = '6755b674b862ab615b4eecc4';
+      localStorage.setItem('userId', userId);
+    }
+
+    // Connect to the Socket.IO server with headers This is for testing purpose not for production ready code
+    const socket = io('http://localhost:8085', {
+      query: {
+        'apiKey': apiKey,
+        'userId': userId,
+      }
+    });
+
     const messagesDiv = document.getElementById('messages');
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendButton');

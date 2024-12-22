@@ -33,4 +33,4 @@ export const groupCreationSchema = z.object({
       { message: "Duplicate member IDs are not allowed" }
     )
     .optional(),
-}).strict();
+}).strict(); 

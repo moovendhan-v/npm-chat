@@ -3,15 +3,16 @@ import CreateChannelController from '@/controller/channel/CreateChannelControlle
 import GetChannelController from '@/controller/channel/GetChannelController';
 import { bodyFieldValidationMiddleware } from "@/middleware/bodyParamsMiddleware";
 import { queryParamMiddleware } from '@/middleware/queryParamsMiddleware';
+import { authMiddleware } from '@/middleware/authMiddleware';
 
 const channelRouter = Router();
 const channel = new CreateChannelController();
 const getChannel = new GetChannelController();
 
-channelRouter.post('/', bodyFieldValidationMiddleware, channel.createChannel);
+channelRouter.post('/', authMiddleware, bodyFieldValidationMiddleware, channel.createChannel);
 
-channelRouter.get('/all', queryParamMiddleware, getChannel.getAllChennels);
+channelRouter.get('/all', authMiddleware, queryParamMiddleware, getChannel.getAllChennels);
 
-channelRouter.get('/', queryParamMiddleware, getChannel.getGroupDetails);
+channelRouter.get('/', authMiddleware, queryParamMiddleware, getChannel.getGroupDetails);
 
 export default channelRouter;

@@ -1,4 +1,14 @@
-export type ErrorType = 'TooManyRequest' | 'NotFound' | 'InternalServerError' | 'Unauthorized' | 'UserRoleNotAllowed' | 'InvalidEndpoint' | 'RoleFieldRestriction' | 'invalidFieldsException' | 'PayloadValidationFailed';
+export type ErrorType = 'TooManyRequest' 
+| 'NotFound' 
+| 'InternalServerError' 
+| 'Unauthorized' 
+| 'UserRoleNotAllowed' 
+| 'InvalidEndpoint' 
+| 'RoleFieldRestriction' 
+| 'invalidFieldsException' 
+| 'PayloadValidationFailed' 
+| 'UserNotFound'
+| 'InvalidApiKey';
 
 // ErrorDetails interface
 export interface ErrorDetails {
@@ -18,6 +28,16 @@ export const ErrorConfig: Record<ErrorType, ErrorDetails> = {
     message: 'The requested resource was not found.',
     code: '404',
     type: 'NotFound',
+  },
+  UserNotFound: {
+    message: 'User not found.',
+    code: '404',
+    type: 'UserNotFound',
+  },
+  InvalidApiKey: {
+    message: 'User not found.',
+    code: '404',
+    type: 'InvalidApiKey',
   },
   InternalServerError: {
     message: 'An unexpected error occurred. Please try again later.',
