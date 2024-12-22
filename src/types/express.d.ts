@@ -28,7 +28,7 @@ declare global {
       options?: RequestOptions;
       user?: {
         id: string;
-        username: string;
+        name: string;
         email: string;
         role: UserRole;
       };

@@ -10,13 +10,20 @@ import channelRouter from './router/channel/ChannelRouts';
 
 // console.log(Env);
 
+
 // Create an Express application
 const app = express();
 const PORT = 8085;
 
+// Enable CORS with configuration
+app.use(cors({
+  origin: '*', // Replace with your frontend origin
+  methods: '*', // Specify allowed methods if needed
+  allowedHeaders: '*', // Allowed headers
+}));
+
 // Add this middleware to handle JSON request bodies
 app.use(express.json());
-
 
 // Middleware to log responses before sending them
 // app.use((req, res, next) => {
@@ -41,18 +48,12 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Hello, TypeScript with Express and Socket.IO!');
 });
- 
+
 // Routes
 app.use('/users', userRouter);
 app.use('/groups', groupRouter);
 app.use('/channels', channelRouter);
 
-// Enable CORS with configuration
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
 
 // Use Helmet to secure HTTP headers
 app.use(helmet());

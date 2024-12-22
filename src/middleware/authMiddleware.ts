@@ -28,7 +28,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
 
         const userPayload = {
             id: user.id,
-            username: user.username,
+            name: user.username,
             email: user.email,
             role: role || 'guest',
         };

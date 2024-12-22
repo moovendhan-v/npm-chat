@@ -14,8 +14,8 @@ class GetUsersService {
   }
 
   async getAllUsers(options: RequestOptions) {
-    const { pagination, select } = options;
-
+    const { pagination, select, selectedFields } = options;
+    console.log('selectedFields', pagination, select, selectedFields);
     const allUsers = await prisma.user.findMany({
       ...pagination,
       select

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Interactive Socket.IO Client</title>
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     body {
       background: black;
@@ -12,10 +14,12 @@
       margin: 20px;
       color: white;
     }
-    input[type="text"]{
+
+    input[type="text"] {
       background-color: black;
       color: white;
     }
+
     #messages {
       border: 1px solid #ccc;
       padding: 10px;
@@ -23,24 +27,39 @@
       height: 200px;
       overflow-y: auto;
     }
+
     #input-container {
       display: flex;
       gap: 10px;
     }
+
     input[type="text"] {
       flex: 1;
       padding: 8px;
       font-size: 16px;
     }
+
     button {
       padding: 8px 16px;
       font-size: 16px;
       cursor: pointer;
     }
+
+    #userList {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
+
 <body>
   <h1>Socket.IO Client</h1>
+  <p id="userId"></p>Userid : </p>
+  <div>
+    <label for="userSelect">Select a user to send a message:</label>
+    <select id="userSelect">
+      <option value="" disabled selected>Select a user</option>
+    </select>
+  </div>
   <div id="messages">
     <p><em>Messages will appear here...</em></p>
   </div>
@@ -50,16 +69,15 @@
   </div>
 
   <script>
-    // Check if userId is available in local storage
     let userId = localStorage.getItem('userId');
-    const apiKey = 'pkK11BosNhgqTZwJ4UvyGJF3UcGPNsWl4EkOPeENuX1Qyj+kOVromKesOz1DMBFY'; // Replace with your actual API key
+    const apiKey = 'pkK11BosNhgqTZwJ4UvyGJF3UcGPNsWl4EkOPeENuX1Qyj+kOVromKesOz1DMBFY';
 
     if (!userId) {
       userId = '6755b674b862ab615b4eecc4';
       localStorage.setItem('userId', userId);
     }
 
-    // Connect to the Socket.IO server with headers This is for testing purpose not for production ready code
+    // Connect to the Socket.IO server with headers
     const socket = io('http://localhost:8085', {
       query: {
         'apiKey': apiKey,
@@ -70,6 +88,34 @@
     const messagesDiv = document.getElementById('messages');
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendButton');
+    const userSelect = document.getElementById('userSelect');
+    const userDetails = document.getElementById('userId');
+    const loggedInId = localStorage.getItem('userId');
+    console.log('Logged in user:', loggedInId);
+    userDetails.innerText = loggedInId;
+
+    // Fetch users from the API
+    async function fetchUsers() {
+      try {
+        const response = await axios.get('http://localhost:8085/users/all?fields=id,username', {
+          headers: {
+            'x-api-key': apiKey,
+            'x-user-id': userId,
+            'x-role': 'admin',
+          }
+        });
+        const users = response.data;
+        console.log('Users:', users);
+        users.forEach(user => {
+          const option = document.createElement('option');
+          option.value = user.id;
+          option.textContent = `${user.id} - ${user.username}`;
+          userSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    }
 
     // Utility to append messages to the chat window
     function appendMessage(content, isServer = false) {
@@ -92,13 +138,23 @@
       appendMessage(data, true);
     });
 
+    socket.on('message', (data) => {
+      const { from, message } = data;
+      appendMessage(`From ${from}: ${message}`, true);
+    });
+
     // Handle sending messages
     function sendMessage() {
+      const recipientId = userSelect.value;
       const message = messageInput.value.trim();
-      if (message) {
+
+      if (recipientId && message) {
         appendMessage(message); // Show user message
-        socket.emit('message', message); // Emit message to server
+        console.log('Sending message:', recipientId, message);
+        socket.emit('sendMessage', { recipientId, message }); // Emit message to the selected user
         messageInput.value = ''; // Clear the input
+      } else {
+        alert('Please select a user and enter a message.');
       }
     }
 
@@ -107,6 +163,10 @@
     messageInput.addEventListener('keyup', (event) => {
       if (event.key === 'Enter') sendMessage();
     });
+
+    // Fetch users when the page loads
+    fetchUsers();
   </script>
 </body>
+
 </html>
