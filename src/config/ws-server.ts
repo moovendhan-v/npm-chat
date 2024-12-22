@@ -8,6 +8,10 @@ interface SendMessagePayload {
   recipientId: string;
   message: string;
 }
+interface TypingIndicator {
+  recipientId: string;
+  message: string;
+}
 
 /**
  * Sets up the Socket.IO server.
@@ -68,6 +72,20 @@ export function setupSocketServer(server: any): SocketIOServer {
         } catch (error) {
           console.error('Error sending message:', error);
           socket.emit('error', 'An error occurred while sending the message');
+        }
+      });
+
+      // Handle 'typing' event
+      socket.on('typing', (data: TypingIndicator) => {
+        const { recipientId, message } = data;
+        const recipientSocketId = activeSockets[recipientId]; // Get the recipient's socket ID
+
+        if (recipientSocketId) {
+          recipientSocketId.emit('typing', { from: userId, message });
+          // io.to(recipientId).emit('typing', { from: userId, message });
+          console.log(`User ${userId} is typing to User ${recipientId}`);
+        } else {
+          console.log(`Recipient ${recipientId} not found`);
         }
       });
 
