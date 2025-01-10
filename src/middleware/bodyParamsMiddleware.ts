@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { AuthConfig } from "@/validation/config";
 import AppError from "@/utils/AppError";
 import { validatePayload } from "@/utils/PayloadValidations";
-import { ZodType } from 'zod';
+import { ZodType } from "zod";
+ 
 
 declare global {
   namespace Express {

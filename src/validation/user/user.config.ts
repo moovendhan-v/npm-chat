@@ -28,16 +28,16 @@ export const getAllUsers = Object.freeze({
     validateSchema: undefined,
     roles: {
         admin: {
-            allowedFields: ["id", "username", "email", "name", "createdAt", "role", "isActive", "lastLogin"]
+            allowedFields: ["id", "username", "email"]
         },
         manager: {
-            allowedFields: ["id", "username", "email", "name", "createdAt", "role"]
+            allowedFields: ["id", "username", "email"]
         },
         user: {
-            allowedFields: ["id", "username", "email", "name", "createdAt"]
+            allowedFields: ["id", "username", "email"]
         },
         guest: {
-            allowedFields: ["id", "username", "email", "name", "createdAt"]
+            allowedFields: ["id", "username", "email"]
         }
     }
 });

@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "39a6531b-7e51-4185-9907-f6603a3003a5",
+		"name": "Npm chat",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24397625"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "All users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseuri}}/users/all?fields=id,username",
+							"host": [
+								"{{baseuri}}"
+							],
+							"path": [
+								"users",
+								"all"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "id,username"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"deamons username\",\r\n    \"email\": \"deamonss@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseuri}}/users",
+							"host": [
+								"{{baseuri}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Groups",
+			"item": [
+				{
+					"name": "Create groups",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"testing error handler\",\r\n  \"admins\": [\"eb2bf5c910e3315f31e90bf2\"],\r\n  \"members\": [\"eb2bf5c910e3315f31e90bf2\"]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseuri}}/groups",
+							"host": [
+								"{{baseuri}}"
+							],
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get groups",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseuri}}/groups/all?fields=id",
+							"host": [
+								"{{baseuri}}"
+							],
+							"path": [
+								"groups",
+								"all"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Channel",
+			"item": [
+				{
+					"name": "Create channel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"channelss\",\r\n    \"description\": \"testing description\",\r\n    \"userId\": \"6755b40aa4f6b550fd0e1195\",\r\n    \"isAdmin\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseuri}}/channels",
+							"host": [
+								"{{baseuri}}"
+							],
+							"path": [
+								"channels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get channles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseuri}}/channels",
+							"host": [
+								"{{baseuri}}"
+							],
+							"path": [
+								"channels"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"// Retrieve values from environment variables\r",
+					"const apiKey = pm.variables.get('apiKey'); // Ensure this is set in your environment variables\r",
+					"const userId = pm.variables.get('userId'); // Ensure this is set in your environment variables\r",
+					"const userRole = pm.variables.get('userRole'); // Ensure this is set in your environment variables\r",
+					"\r",
+					"\r",
+					"// Check if the required environment variables are set\r",
+					"if (!apiKey || !userId || !userRole) {\r",
+					"    console.error(\"Missing environment variables: apiKey, userId, or userRole\");\r",
+					"    throw new Error(\"Missing environment variables: apiKey, userId, or userRole\"); // Throw an error to stop the request\r",
+					"}\r",
+					"\r",
+					"// Add the headers to the request\r",
+					"pm.request.headers.add({\r",
+					"    key: 'x-api-key',\r",
+					"    value: apiKey,\r",
+					"});\r",
+					"\r",
+					"pm.request.headers.add({\r",
+					"    key: 'x-user-id',\r",
+					"    value: userId,\r",
+					"});\r",
+					"\r",
+					"pm.request.headers.add({\r",
+					"    key: 'x-role',\r",
+					"    value: userRole,\r",
+					"});\r",
+					"\r",
+					"// Log the values for debugging (optional)\r",
+					"console.log('API Key:', apiKey);\r",
+					"console.log('User ID:', userId);\r",
+					"console.log('User Role:', userRole);\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseuri",
+			"value": "http://localhost:8085",
+			"type": "string"
+		},
+		{
+			"key": "apiKey",
+			"value": "pkK11BosNhgqTZwJ4UvyGJF3UcGPNsWl4EkOPeENuX1Qyj+kOVromKesOz1DMBFY",
+			"type": "string"
+		},
+		{
+			"key": "userRole",
+			"value": "admi",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "6755b674b862ab615b4eecc4",
+			"type": "string"
+		}
+	]
+}
