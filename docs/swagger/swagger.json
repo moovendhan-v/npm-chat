@@ -1,0 +1,168 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "version": "1.0.0",
+    "description": "API documentation generated from Postman collection"
+  },
+  "paths": {
+    "{{baseuri}}/users/all": {
+      "get": {
+        "summary": "All users",
+        "description": "",
+        "parameters": [
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "{{baseuri}}/users": {
+      "post": {
+        "summary": "create user",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userName": "deamons username",
+                  "email": "deamonss@gmail.com"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "{{baseuri}}/groups": {
+      "post": {
+        "summary": "Create groups",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": "testing error handler",
+                  "admins": [
+                    "eb2bf5c910e3315f31e90bf2"
+                  ],
+                  "members": [
+                    "eb2bf5c910e3315f31e90bf2"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "{{baseuri}}/groups/all": {
+      "get": {
+        "summary": "Get groups",
+        "description": "",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "{{baseuri}}/channels": {
+      "post": {
+        "summary": "Create channel",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": "channelss",
+                  "description": "testing description",
+                  "userId": "6755b40aa4f6b550fd0e1195",
+                  "isAdmin": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "get channles",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {}
+  }
+}

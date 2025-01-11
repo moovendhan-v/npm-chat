@@ -28,37 +28,37 @@ export const getChannels = Object.freeze({
     validateSchema: undefined,
     roles: {
         admin: {
-            allowedFields: ["userId", "description", "name", "isAdmin"]
+            allowedFields: ["userId", "description", "name", "messages", "participants", "createdAt", "participantCount"]
         },
         manager: {
-            allowedFields: ["userId", "description", "name", "isAdmin"]
+            allowedFields: ["userId", "description", "name", "messages", "participants", "createdAt", "participantCount"]
         },
         user: {
-            allowedFields: ["userId", "description", "name", "isAdmin"]
+            allowedFields: ["userId", "description", "name", "messages", "participants", "createdAt", "participantCount"]
         },
         guest: {
-            allowedFields: ["userId", "description", "name", "isAdmin"]
+            allowedFields: ["userId", "description", "name", "messages", "participants", "createdAt", "participantCount"]
         }
     }
 });
 
 export const getAllChannels = Object.freeze({
     method: "GET",
-    path: "/groups/all",
+    path: "/channels/all",
     apiAllowedRole: ["admin", "manager", "user", "guest"],
     validateSchema: undefined,
     roles: {
         admin: {
-            allowedFields: ["userId", "description", "name", "isAdmin"]
+            allowedFields: ["id", "description", "name", "messages", "participants", "createdAt"]
         },
         manager: {
-            allowedFields: ["userId", "description", "name", "isAdmin"]
+            allowedFields: ["id", "description", "name", "messages", "participants", "createdAt"]
         },
         user: {
-            allowedFields: ["userId", "description", "name", "isAdmin"]
+            allowedFields: ["id", "description", "name", "messages", "participants", "createdAt"]
         },
         guest: {
-            allowedFields: ["id", "name", "members"]
+            allowedFields: ["id", "description", "name", "messages", "participants", "createdAt"]
         }
     }
 });

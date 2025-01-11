@@ -35,6 +35,8 @@ const queryParamMiddleware = async (req: Request, res: Response, next: NextFunct
         const allowedFields: AllowedFields = endpointConfig.roles[userRole as keyof typeof endpointConfig.roles]?.allowedFields || [];
 
         if (allowedFields.length === 0) throw new AppError('invalidFieldsException');
+        
+        console.debug(`Allowed fields for ${userRole}: ${allowedFields}`);
 
         // Parse 'fields' query param if exists
         let fields: string[] = [];

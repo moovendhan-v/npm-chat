@@ -8,19 +8,30 @@ class GetChannelService {
     const where: any = {};
     if (id) where.id = id;
 
-    return await prisma.group.findMany({ where });
+    return await prisma.channel.findMany({ where });
   }
 
   async getAllChannelDetails(options: RequestOptions) {
     const { pagination, select } = options;
-
-    const allChannels = await prisma.group.findMany({
+  
+    const allChannels = await prisma.channel.findMany({
       ...pagination,
-      select
-    })
+      select: {
+        ...select,
+        _count: {
+          select: { participants: true },
+        },
+      },
+    });
+   // TODO: Handle this to who can handle
+    const allChannlesWithParticipant = allChannels.map(channel => ({
+      ...channel,
+      participantCount: channel._count.participants,
+    }));
 
-    return allChannels;
-  }
+    console.log("allChannlesWithParticipant", allChannlesWithParticipant);
+    return allChannlesWithParticipant;
+  }  
 
 }
 

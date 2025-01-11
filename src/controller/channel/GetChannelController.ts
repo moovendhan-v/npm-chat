@@ -19,7 +19,7 @@ class GetChannelController{
     }
   };
 
-  getGroupDetails = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getChannelDetails = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.query;
 

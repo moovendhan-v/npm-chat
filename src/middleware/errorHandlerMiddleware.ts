@@ -72,7 +72,7 @@ const errorHandlerMiddleware = (
 
   try {
 
-    console.log("isError(err)", isError(err))
+    console.log("errrrrrr::", err)
     // Handle Prisma-specific errors
     if (isError(err) && prismaError?.errorType) {
       const prismaErrorType = prismaError.errorType;

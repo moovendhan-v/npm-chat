@@ -13,6 +13,6 @@ channelRouter.post('/', authMiddleware, bodyFieldValidationMiddleware, channel.c
 
 channelRouter.get('/all', authMiddleware, queryParamMiddleware, getChannel.getAllChennels);
 
-channelRouter.get('/', authMiddleware, queryParamMiddleware, getChannel.getGroupDetails);
+channelRouter.get('/', authMiddleware, queryParamMiddleware, getChannel.getChannelDetails);
 
 export default channelRouter;
