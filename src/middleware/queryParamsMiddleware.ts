@@ -12,17 +12,25 @@ const queryParamMiddleware = async (req: Request, res: Response, next: NextFunct
         const take = parseInt(req.query.take as string, 10) || 10;
 
         const path = req.originalUrl.split('?')[0];
+        const routePath = req.route?.path;
+        const baseUrl = req.baseUrl;
+        
+        console.log("reqqqq::", req);
 
         // Safely get the user role
         const userRole = req.user?.role || 'guest';
 
-        console.debug(`Request received - Method: ${req.method}, Path: ${path}, Query Params: ${JSON.stringify(req.query)}, IP: ${req.ip}, Role: ${userRole}`);
+        console.debug(`Request received - Method: ${req.method}, Routepath: ${routePath}, Path: ${path}, Query Params: ${JSON.stringify(req.query)}, IP: ${req.ip}, Role: ${userRole}`);
 
         // Determine which endpoint the request is for
+        // #TODO: Handle if the path params and handle another way insted of looping
         const endpoint = Object.keys(AuthConfig.endpoints).find((key) => {
             const endpoint = AuthConfig.endpoints[key as keyof typeof AuthConfig.endpoints];
-            return path === endpoint.path && endpoint.method === req.method;
+            console.log("endpoint.checking::", endpoint.path, "path::", path, "routepath::", routePath, "Method::", endpoint.method);
+            return `${baseUrl}${routePath}` == endpoint.path && endpoint.method === req.method;
         });
+
+        console.log("endpoint::", endpoint);
 
         if (!endpoint) throw new AppError('InvalidEndpoint');
 

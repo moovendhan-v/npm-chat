@@ -7,6 +7,7 @@ import groupRouter from '@/router/group/GroupRoutes';
 // import {Env} from "./config/Env";
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware';
 import channelRouter from './router/channel/ChannelRouts';
+import messageRouter from './router/message/MessageRouters';
 
 // console.log(Env);
 
@@ -53,6 +54,7 @@ app.get('/', (req, res) => {
 app.use('/users', userRouter);
 app.use('/groups', groupRouter);
 app.use('/channels', channelRouter);
+app.use('/chats', messageRouter);
 
 
 // Use Helmet to secure HTTP headers

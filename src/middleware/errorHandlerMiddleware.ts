@@ -93,6 +93,10 @@ const errorHandlerMiddleware = (
 
     // Handle custom AppError
     if (isAppError(err)) {
+      console.log("APP ERROR TYPE:", err.type);
+      console.log("APP ERROR MESSAGE:", err.message);
+      console.log("APP ERROR DETAILS:");
+      console.dir(err, { depth: null });
       const errorType = err.type as ErrorType;
       console.log("APP ERROR TYPE:", errorType);
 
