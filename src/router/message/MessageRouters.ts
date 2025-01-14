@@ -13,6 +13,6 @@ messageRouter.post('/private/:chatId/messages', authMiddleware, bodyFieldValidat
 
 messageRouter.get('/private/:chatId/messages', authMiddleware, queryParamMiddleware, chatController.getChatMessages);
 
-messageRouter.post('/private/user/:userId', authMiddleware, queryParamMiddleware, chatController.getUserChats);
+messageRouter.get('/private/user/:userId', authMiddleware, queryParamMiddleware, chatController.getUserChats);
 
 export default messageRouter;

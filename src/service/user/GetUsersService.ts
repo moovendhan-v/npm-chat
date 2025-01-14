@@ -14,14 +14,22 @@ class GetUsersService {
   }
 
   async getAllUsers(options: RequestOptions) {
-    const { pagination, select, selectedFields } = options;
-    console.log('selectedFields', pagination, select, selectedFields);
+    const { pagination } = options;
+
     const allUsers = await prisma.user.findMany({
       ...pagination,
-      select
+      include: {
+        chatsSent: true,
+        chatsReceived: true
+      }
     });
 
-    return allUsers;
+    const usersWithChats = allUsers.map(user => ({
+      ...user,
+      oneOnOneChats: [...user.chatsSent, ...user.chatsReceived]
+    }));
+
+    return usersWithChats;
   }
 
 }

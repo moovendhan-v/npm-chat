@@ -26,13 +26,15 @@ const queryParamMiddleware = async (req: Request, res: Response, next: NextFunct
         // #TODO: Handle if the path params and handle another way insted of looping
         const endpoint = Object.keys(AuthConfig.endpoints).find((key) => {
             const endpoint = AuthConfig.endpoints[key as keyof typeof AuthConfig.endpoints];
-            console.log("endpoint.checking::", endpoint.path, "path::", path, "routepath::", routePath, "Method::", endpoint.method);
-            return `${baseUrl}${routePath}` == endpoint.path && endpoint.method === req.method;
+            console.log("endpoint.checking::", `${baseUrl}${routePath}`, "path::", endpoint.path);
+            return `${baseUrl}${routePath == '/' ? "" : routePath}` == endpoint.path && endpoint.method === req.method;
         });
 
         console.log("endpoint::", endpoint);
 
-        if (!endpoint) throw new AppError('InvalidEndpoint');
+        if (!endpoint) {
+            throw new AppError("InvalidEndpoint");
+        }
 
         // Extract endpoint config and assert that it's a valid key
         const endpointConfig = AuthConfig.endpoints[endpoint as keyof typeof AuthConfig.endpoints];
