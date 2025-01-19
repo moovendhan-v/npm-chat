@@ -1,4 +1,4 @@
-import { ErrorConfig, ErrorType, ErrorDetails } from '@/utils/error_handler/databaseErrorConfig';
+import { ErrorConfig, ErrorType, ErrorDetails } from '@/utils/error_handler/DatabaseErrorConfig';
 import { handlePrismaError } from './error_handler/prismaErrorHandler';
 import { ErrorType as PrismaErrorConfig } from "@/utils/error_handler/prismaErrorHandler";
 

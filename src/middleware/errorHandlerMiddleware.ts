@@ -4,7 +4,7 @@ import AppError from "@/utils/AppError";
 import DatabaseError from "@/utils/DatabaseError";
 import { handlePrismaError, PrismaError } from "@/utils/error_handler/prismaErrorHandler";
 import { ErrorConfig, ErrorType } from "@/utils/error_handler/errorConfig";
-import { ErrorConfig as PrismaErrorConfig } from "@/utils/error_handler/databaseErrorConfig";
+import { ErrorConfig as PrismaErrorConfig } from "@/utils/error_handler/DatabaseErrorConfig";
 
 // Custom type guards
 const isAppError = (error: unknown): error is AppError =>
