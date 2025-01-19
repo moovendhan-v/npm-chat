@@ -1,18 +1,23 @@
 {
   "compilerOptions": {
-    "module": "ESNext", // Allows ES module imports/exports
-    "target": "ES2020", // Can be ES2020 or later
-    "moduleResolution": "node", // Resolves modules like Node.js
-    "esModuleInterop": true, // For compatibility with CommonJS modules
-    "strict": true, // Enable strict type checking
+    "module": "ESNext",  // Keeps the ES module imports/exports
+    "target": "ESNext",  // Set a reasonable ECMAScript version
+    "moduleResolution": "node",  // Resolves modules like Node.js
+    "esModuleInterop": true,  // Ensures compatibility with CommonJS modules
+    "strict": true,  // Enable strict type checking
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist", // Output directory for compiled files
-    "baseUrl": ".", // Base path for modules
+    "outDir": "./dist",  // Output directory for compiled files
+    "baseUrl": ".",  // Base path for modules
     "paths": {
-      "@/*": ["src/*"] // Path alias for easier imports
-    }
+      "@/*": ["src/*"]  // Path alias for easier imports
+    },
+    "allowImportingTsExtensions": true, // Allows importing TypeScript files without specifying the extension
+    "noEmit": true, // Do not emit outputs
+    "resolveJsonModule": true,  // Allow importing JSON files as modules
+    "isolatedModules": true,  // Ensures each file can be compiled individually
+    "allowSyntheticDefaultImports": true  // Compatibility with default imports
   },
-  "include": ["src/**/*"], // Include all TypeScript files in the `src` directory
-  "exclude": ["node_modules"] // Exclude the `node_modules` directory
+  "include": ["src/**/*"],  // Include all TypeScript files in the `src` directory
+  "exclude": ["node_modules"]  // Exclude the `node_modules` directory
 }

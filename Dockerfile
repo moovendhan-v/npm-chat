@@ -4,6 +4,9 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /usr/src/app
 
+# Install openssl (the default for Alpine 3.21 is openssl 3.0)
+RUN apk add --no-cache openssl
+
 # Install necessary build tools and dependencies
 RUN apk add --no-cache python3 make g++
 
@@ -26,8 +29,7 @@ RUN npx prisma generate --schema=./src/prisma/schema.prisma
 RUN npm run build
 
 # Create volumes for data persistence
-VOLUME ["/usr/src/app/data"]
-VOLUME ["/usr/src/app/logs"]
+VOLUME ["/usr/src/app/"]
 
 # Install ONLY tsconfig-paths for production
 RUN npm prune --production && \
@@ -49,4 +51,4 @@ USER appuser
 # CMD ["node", "-r", "tsconfig-paths/register", "./dist/index.js"]
 
 #TODO: Change this to production
-# CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev"]
