@@ -25,9 +25,9 @@ jobs:
     # Step 3: Build Docker image
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/npmchat:latest .
 
     # Step 4: Push Docker image to Docker Hub
     - name: Push Docker image to Docker Hub
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/npmchat:latest
