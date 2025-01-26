@@ -6,8 +6,9 @@
   "scripts": {
     "create": "npx tsx ./boilerplate/CreateFile.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "tsc --noEmit",
     "start": "npx tsx --inspect --trace-deprecation --env-file=.env src/index.ts",
+    "startbuild": "node -r tsconfig-paths/register dist/index.js",
     "dev": "npx tsx watch --env-file=.env src/index.ts",
     "watch": "tsc --watch",
     "lint": "eslint . --ext .ts,.tsx",
@@ -23,11 +24,15 @@
     "@prisma/client": "^6.0.1",
     "axios": "^1.7.7",
     "express": "^4.21.2",
+    "generate": "^0.14.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.7.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "tsc": "^2.0.4",
     "ws": "^8.18.0",
     "zod": "^3.23.8"
   },
@@ -42,6 +47,8 @@
     "@types/node": "^22.9.0",
     "@types/sequelize": "^4.28.20",
     "@types/socket.io": "^3.0.2",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.7",
     "@types/ws": "^8.5.13",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
@@ -60,6 +67,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }
