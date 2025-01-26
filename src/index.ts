@@ -1,16 +1,21 @@
+// import './utils/pathUtils';
+
 import express from 'express';
+import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import { setupSocketServer } from './config/ws-server';
 import userRouter from '@/router/user/UsersRoute';
 import groupRouter from '@/router/group/GroupRoutes';
-// import {Env} from "./config/Env";
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware';
 import channelRouter from './router/channel/ChannelRouts';
 import messageRouter from './router/message/MessageRouters';
+// import swaggerDocs from './utils/Swagger';
 
+// Now you can use __dirname directly
+const usersRoutePath = path.join(__dirname, './router/user/UsersRoute.ts');
+console.log("UsersRoute file path:", usersRoutePath);
 // console.log(Env);
-
 
 // Create an Express application
 const app = express();
@@ -63,6 +68,8 @@ app.use(helmet());
 // Start the Express server
 const server = app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Happy coding!`);
+  // swaggerDocs(app, PORT);
 });
 
 // Setup the Socket.IO server with the Express server
